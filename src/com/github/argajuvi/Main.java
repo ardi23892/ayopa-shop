@@ -1,10 +1,18 @@
 package com.github.argajuvi;
 
+import com.github.argajuvi.models.Product;
 import com.github.argajuvi.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
+    private final List<Product> productList;
+
     public Main() {
+        this.productList = new ArrayList<>();
+
         while (true) {
             Utils.clearScreen();
 
@@ -60,6 +68,49 @@ public class Main {
         throw new UnsupportedOperationException("Register menu has yet been build");
     }
 
+    private void showBuyProductsMenu() {
+        while (true) {
+            Utils.clearScreen();
+
+            System.out.println(
+                    "1. Order products\n" +
+                    "2. Check my cart\n" +
+                    "3. Checkout\n" +
+                    "0. Back\n");
+
+            int choice;
+            while (true) {
+                System.out.print(">> ");
+                choice = Utils.scanInt(-1);
+
+                if (choice == -1) {
+                    System.out.println("Input must be integer");
+                    continue;
+                }
+
+                break;
+            }
+
+            switch (choice) {
+                case 1:
+                    // TODO: show all products and select one to add to the cart
+                    break;
+                case 2:
+                    // TODO: view current ordered products in the cart
+                    break;
+                case 3:
+                    // TODO: initiate the purchase
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Option is not available!");
+                    Utils.waitForEnter();
+                    break;
+            }
+        }
+    }
+
     private void showUserMenu() {
         while (true) {
             Utils.clearScreen();
@@ -87,10 +138,10 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    // TODO: user checks their purchase history (using struct)
+                    // TODO: user checks their purchase history (using receipt)
                     break;
                 case 2:
-                    // TODO: user starts to buy products
+                    this.showBuyProductsMenu();
                     break;
                 case 3:
                     // TODO: logout from current user
