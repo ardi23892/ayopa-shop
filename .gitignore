@@ -5,6 +5,7 @@ out/
 
 # Eclipse
 bin/
+.settings/
 .classpath
 .project
 *.eml
