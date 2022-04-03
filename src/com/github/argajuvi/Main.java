@@ -33,7 +33,7 @@ public class Main {
                     "2. Register\n" +
                     "0. Exit\n");
 
-            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
+            int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
                     // TODO: run login menu
@@ -105,9 +105,7 @@ public class Main {
 
         int choice;
         while (true) {
-            choice = Utils.scanAbsoluteInt(
-                    "Product to buy ['0' to go back]: ",
-                    "Input must be integer");
+            choice = Utils.scanAbsoluteInt("Product to buy ['0' to go back]: ");
 
             if (choice == 0) {
                 return;
@@ -124,7 +122,7 @@ public class Main {
         int quantity;
 
         while (true) {
-            quantity = Utils.scanAbsoluteInt(">> ", "Input must be integer");
+            quantity = Utils.scanAbsoluteInt(">> ");
             if (quantity < 1) {
                 System.out.println("Product quantity must be greater than 1");
                 continue;
@@ -149,7 +147,7 @@ public class Main {
                     "3. Checkout\n" +
                     "0. Back\n");
 
-            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
+            int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
                     this.showOrderProductMenu();
@@ -182,7 +180,7 @@ public class Main {
                     "3. Logout\n" +
                     "0. Exit\n");
 
-            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
+            int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
                     // TODO: user checks their purchase history (using receipt)

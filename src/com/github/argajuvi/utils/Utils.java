@@ -26,17 +26,15 @@ public class Utils {
      *
      * @param prefix The string printed before asking for input,
      *               maybe something like ">> " can make it look pretty.
-     * @param errorMessage The user can give an invalid input,
-     *                     what kind of message do you want to send to them?
      */
-    public static int scanAbsoluteInt(String prefix, String errorMessage) {
+    public static int scanAbsoluteInt(String prefix) {
         while (true) {
             System.out.print(prefix);
 
             try {
                 return SCANNER.nextInt();
             } catch (InputMismatchException ignored) {
-                System.out.print(errorMessage);
+                System.out.println("Input must be integer");
             } finally {
                 // clears the buffer
                 SCANNER.nextLine();
