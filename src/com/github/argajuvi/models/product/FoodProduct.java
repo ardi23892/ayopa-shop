@@ -1,4 +1,4 @@
-package com.github.argajuvi.models;
+package com.github.argajuvi.models.product;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

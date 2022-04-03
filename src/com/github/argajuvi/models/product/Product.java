@@ -1,4 +1,4 @@
-package com.github.argajuvi.models;
+package com.github.argajuvi.models.product;
 
 public abstract class Product {
 

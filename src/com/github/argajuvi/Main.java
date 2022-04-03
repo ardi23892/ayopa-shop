@@ -1,6 +1,6 @@
 package com.github.argajuvi;
 
-import com.github.argajuvi.models.Product;
+import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.utils.Utils;
 
 import java.util.ArrayList;
