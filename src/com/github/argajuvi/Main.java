@@ -10,20 +10,21 @@ import com.github.argajuvi.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.Scanner;
 
 public class Main {
     Scanner sc = new Scanner(System.in);
 
     private final List<Product> productList;
+    private final List<User> userList;
 
     public Main() {
         this.productList = new ArrayList<>();
-        Vector<User> users = new Vector<>();
-        //		PRE-REGISTER DATA ADMIN
-		users.add(registerAdmin(users));
-        
+        this.userList = new ArrayList<>();
+
+        // PRE-REGISTER DATA ADMIN
+        userList.add(registerAdmin(userList));
+
         while (true) {
             Utils.clearScreen();
 
@@ -43,10 +44,10 @@ public class Main {
             int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
-                    loginUser(users);
+                    loginUser(userList);
                     break;
                 case 2:
-                    users.add(registerUser(users));
+                    userList.add(registerUser(userList));
                     break;
                 case 0:
                     System.exit(0);
@@ -59,78 +60,79 @@ public class Main {
         }
     }
 
- //	FUNCTION UNTUK LOGIN USER
-	public void loginUser(Vector<User> users) {
-		String username="";
-		String password="";
+    //	FUNCTION UNTUK LOGIN USER
+    public void loginUser(List<User> users) {
+        String username;
+        String password;
 
-		System.out.print("Input Username: ");
-		username = sc.nextLine();
-		System.out.print("Input Password: ");
-		password = sc.nextLine();
-//		VALIDASI DATA LOGIN
-		try {
-//			LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
-			for (int i = 0; i <= users.size(); i++) {
-				if(username.equals(users.get(i).getUsername())) {
-					if(password.equals(users.get(i).getPassword())) {
-//						VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
-						if(username.equals("admin")) {
-                            //SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
-							System.out.println("Menu Admin");
-							break;
-						}else {
-                            //SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
-							System.out.println("Menu User");
-							break;
-						}
-					}else {
-						System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
-						break;
-					}
-				}
-			}
-//		VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA VECTOR (DENGAN ARRAY OUT OF RANGE)
-		} catch (Exception e) {
-			System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
-		}
-	}
+        System.out.print("Input Username: ");
+        username = sc.nextLine();
+        System.out.print("Input Password: ");
+        password = sc.nextLine();
+        // VALIDASI DATA LOGIN
+        try {
+            // LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
+            for (int i = 0; i <= users.size(); i++) {
+                if (username.equals(users.get(i).getUsername())) {
+                    if (password.equals(users.get(i).getPassword())) {
+                        // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
+                        if (username.equals("admin")) {
+                            // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
+                            System.out.println("Menu Admin");
+                            break;
+                        } else {
+                            // SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
+                            System.out.println("Menu User");
+                            break;
+                        }
+                    } else {
+                        System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
+                        break;
+                    }
+                }
+            }
+            // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA VECTOR (DENGAN ARRAY OUT OF RANGE)
+        } catch (Exception e) {
+            System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
+        }
+    }
 
-//	FUNCTION REGISTER DATA USER BARU
-	public User registerUser(Vector<User> users) {
-		boolean registering = true;
-		String username="";
-		String password="";
-//		LOOPING SAMPAI REGISTRASI BERHASIL
-		do {
-//			LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
-			do {
-				System.out.print("Input New Username [>5 characters]: ");
-				username = sc.nextLine();
-				System.out.print("Input New Password [>5 characters]: ");
-				password = sc.nextLine();
-			} while (username.length()<5 || password.length()<5);
-			try {
-				for (int i = 0; i <= users.size(); i++) {
-					if(username.equals(users.get(i).getUsername())) {
-						System.out.println("Username sudah ada, coba yang lain!");
-						break;
-					}
-				}
-			} catch (Exception e) {
-				registering=false;
-			}
+    //	FUNCTION REGISTER DATA USER BARU
+    public User registerUser(List<User> users) {
+        boolean registering = true;
 
-		} while (registering==true);
+        String username;
+        String password;
+        // LOOPING SAMPAI REGISTRASI BERHASIL
+        do {
+            // LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
+            do {
+                System.out.print("Input New Username [>5 characters]: ");
+                username = sc.nextLine();
+                System.out.print("Input New Password [>5 characters]: ");
+                password = sc.nextLine();
+            } while (username.length() < 5 || password.length() < 5);
+            try {
+                for (int i = 0; i <= users.size(); i++) {
+                    if (username.equals(users.get(i).getUsername())) {
+                        System.out.println("Username sudah ada, coba yang lain!");
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                registering = false;
+            }
 
-		System.out.println("User berhasil didaftarkan!!");
-		return new User(username,password);
-	}
+        } while (registering);
+
+        System.out.println("User berhasil didaftarkan!!");
+        return new User(username, password);
+    }
 
     //	PRE REGISTER DATA ADMIN
-	public User registerAdmin(Vector<User> users) {
-		return new User("admin","admin123");
-	}
+    public User registerAdmin(List<User> users) {
+        return new User("admin", "admin123");
+    }
 
     private void showProducts() {
         if (productList.isEmpty()) {
