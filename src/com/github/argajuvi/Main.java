@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    Scanner sc = new Scanner(System.in);
 
     private final List<Product> productList;
     private final List<User> userList;
@@ -62,19 +61,23 @@ public class Main {
 
     //	FUNCTION UNTUK LOGIN USER
     public void loginUser(List<User> users) {
+        Scanner scanner = Utils.SCANNER;
+
         String username;
         String password;
 
         System.out.print("Input Username: ");
-        username = sc.nextLine();
+        username = scanner.nextLine();
         System.out.print("Input Password: ");
-        password = sc.nextLine();
+        password = scanner.nextLine();
         // VALIDASI DATA LOGIN
         try {
             // LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
             for (int i = 0; i <= users.size(); i++) {
-                if (username.equals(users.get(i).getUsername())) {
-                    if (password.equals(users.get(i).getPassword())) {
+                User user = users.get(i);
+
+                if (username.equals(user.getUsername())) {
+                    if (password.equals(user.getPassword())) {
                         // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
                         if (username.equals("admin")) {
                             // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
@@ -99,6 +102,7 @@ public class Main {
 
     //	FUNCTION REGISTER DATA USER BARU
     public User registerUser(List<User> users) {
+        Scanner scanner = Utils.SCANNER;
         boolean registering = true;
 
         String username;
@@ -108,9 +112,9 @@ public class Main {
             // LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
             do {
                 System.out.print("Input New Username [>5 characters]: ");
-                username = sc.nextLine();
+                username = scanner.nextLine();
                 System.out.print("Input New Password [>5 characters]: ");
-                password = sc.nextLine();
+                password = scanner.nextLine();
             } while (username.length() < 5 || password.length() < 5);
             try {
                 for (int i = 0; i <= users.size(); i++) {
