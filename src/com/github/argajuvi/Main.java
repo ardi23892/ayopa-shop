@@ -36,10 +36,10 @@ public class Main {
             int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
-                    // TODO: run login menu
+                    this.showLoginMenu();
                     break;
                 case 2:
-                    // TODO: run register menu
+                    this.showRegisterMenu();
                     break;
                 case 0:
                     System.exit(0);
@@ -52,11 +52,11 @@ public class Main {
         }
     }
 
-    private void showLogin() {
+    private void showLoginMenu() {
         throw new UnsupportedOperationException("Login menu has yet been build");
     }
 
-    private void showRegister() {
+    private void showRegisterMenu() {
         throw new UnsupportedOperationException("Register menu has yet been build");
     }
 
