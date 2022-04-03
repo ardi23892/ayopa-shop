@@ -7,16 +7,24 @@ import java.util.List;
 
 public class Receipt {
 
+    /**
+     * To be able to generate the {@link Receipt#id} automatically.
+     *
+     * We need a tracker that starts from {@code 1} and automatically increment
+     * as more receipts are created.
+     */
+    private static int ID_TRACKER = 1;
+
     private final int id;
+    private final List<Order> orderList;
     private final LocalDate purchaseDate;
     private final int totalPrice;
-    private final List<Order> orderList;
 
-    public Receipt(int id, LocalDate purchaseDate, int totalPrice, List<Order> orderList) {
-        this.id = id;
+    public Receipt(List<Order> orderList, LocalDate purchaseDate, int totalPrice) {
+        this.id = ID_TRACKER++;
+        this.orderList = orderList;
         this.purchaseDate = purchaseDate;
         this.totalPrice = totalPrice;
-        this.orderList = orderList;
     }
 
     public int getId() {
