@@ -1,2 +1,11 @@
+# IntellIJ
 .idea/
 out/
+*.iml
+
+# Eclipse
+bin/
+.classpath
+.project
+*.eml
+*.userlibraries
