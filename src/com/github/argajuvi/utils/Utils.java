@@ -17,26 +17,31 @@ public class Utils {
     }
 
     /**
-     * Scans the console input for integer value
+     * Scans the console for integer input, but it MUST be integer.
      * <p>
-     * This shortens the use of {@link Scanner#nextInt()} where you need to
-     * clear the buffer manually using {@link Scanner#nextLine()}.
+     * This input scanner already clears the buffer automatically.
+     * <p>
+     * The word "absolute" from this function means it will try again and again
+     * until the scanner gets integer as its value.
      *
-     * @param defaultVal The default value given when the user
-     *                   gives an invalid input (let's say they give a string)
+     * @param prefix The string printed before asking for input,
+     *               maybe something like ">> " can make it look pretty.
+     * @param errorMessage The user can give an invalid input,
+     *                     what kind of message do you want to send to them?
      */
-    public static int scanInt(int defaultVal) {
-        int input = defaultVal;
+    public static int scanAbsoluteInt(String prefix, String errorMessage) {
+        while (true) {
+            System.out.print(prefix);
 
-        try {
-            input = SCANNER.nextInt();
-        } catch (InputMismatchException ignored) {
-        } finally {
-            // clears the buffer
-            SCANNER.nextLine();
+            try {
+                return SCANNER.nextInt();
+            } catch (InputMismatchException ignored) {
+                System.out.print(errorMessage);
+            } finally {
+                // clears the buffer
+                SCANNER.nextLine();
+            }
         }
-
-        return input;
     }
 
     /**

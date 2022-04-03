@@ -29,19 +29,7 @@ public class Main {
                     "2. Register\n" +
                     "0. Exit\n");
 
-            int choice;
-            while (true) {
-                System.out.print(">> ");
-                choice = Utils.scanInt(-1);
-
-                if (choice == -1) {
-                    System.out.println("Input must be integer");
-                    continue;
-                }
-
-                break;
-            }
-
+            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
             switch (choice) {
                 case 1:
                     // TODO: run login menu
@@ -78,19 +66,7 @@ public class Main {
                     "3. Checkout\n" +
                     "0. Back\n");
 
-            int choice;
-            while (true) {
-                System.out.print(">> ");
-                choice = Utils.scanInt(-1);
-
-                if (choice == -1) {
-                    System.out.println("Input must be integer");
-                    continue;
-                }
-
-                break;
-            }
-
+            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
             switch (choice) {
                 case 1:
                     // TODO: show all products and select one to add to the cart
@@ -123,19 +99,7 @@ public class Main {
                     "3. Logout\n" +
                     "0. Exit\n");
 
-            int choice;
-            while (true) {
-                System.out.print(">> ");
-                choice = Utils.scanInt(-1);
-
-                if (choice == -1) {
-                    System.out.println("Input must be integer");
-                    continue;
-                }
-
-                break;
-            }
-
+            int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
             switch (choice) {
                 case 1:
                     // TODO: user checks their purchase history (using receipt)
