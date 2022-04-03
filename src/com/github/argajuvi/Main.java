@@ -1,5 +1,9 @@
 package com.github.argajuvi;
 
+import com.github.argajuvi.models.order.Order;
+import com.github.argajuvi.models.product.BookProduct;
+import com.github.argajuvi.models.product.ClothingProduct;
+import com.github.argajuvi.models.product.FoodProduct;
 import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.utils.Utils;
 
@@ -56,6 +60,85 @@ public class Main {
         throw new UnsupportedOperationException("Register menu has yet been build");
     }
 
+    private void showProducts() {
+        if (productList.isEmpty()) {
+            System.out.println("No products found.");
+        } else {
+            String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
+            String line = "----------------------------------------------------------------\n";
+            int count = 0;
+
+            System.out.print(line);
+            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.print(line);
+
+            for (Product product : productList) {
+                count++;
+
+                String productType = "Invalid";
+                if (product instanceof BookProduct) {
+                    productType = "Book";
+                } else if (product instanceof ClothingProduct) {
+                    productType = "Clothing";
+                } else if (product instanceof FoodProduct) {
+                    productType = "Food";
+                }
+
+                System.out.printf(
+                        rowFormat,
+                        count + "", product.getName(), product.getPrice() + "", productType
+                );
+            }
+
+            System.out.print(line);
+        }
+    }
+
+    private void showOrderProductMenu() {
+        Utils.clearScreen();
+        this.showProducts();
+
+        if (productList.isEmpty()) {
+            Utils.waitForEnter();
+            return;
+        }
+
+        int choice;
+        while (true) {
+            choice = Utils.scanAbsoluteInt(
+                    "Product to buy ['0' to go back]: ",
+                    "Input must be integer");
+
+            if (choice == 0) {
+                return;
+            }
+            if (choice < 1 || choice > productList.size()) {
+                System.out.println("Cannot find product");
+                continue;
+            }
+
+            break;
+        }
+
+        Product chosenProduct = productList.get(choice - 1);
+        int quantity;
+
+        while (true) {
+            quantity = Utils.scanAbsoluteInt(">> ", "Input must be integer");
+            if (quantity < 1) {
+                System.out.println("Product quantity must be greater than 1");
+                continue;
+            }
+
+            break;
+        }
+
+        Order order = new Order(chosenProduct, quantity);
+        // TODO: add order to user's cart
+
+        Utils.waitForEnter();
+    }
+
     private void showBuyProductsMenu() {
         while (true) {
             Utils.clearScreen();
@@ -69,7 +152,7 @@ public class Main {
             int choice = Utils.scanAbsoluteInt(">> ", "Input must be integer");
             switch (choice) {
                 case 1:
-                    // TODO: show all products and select one to add to the cart
+                    this.showOrderProductMenu();
                     break;
                 case 2:
                     // TODO: view current ordered products in the cart
