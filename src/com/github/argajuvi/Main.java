@@ -306,9 +306,11 @@ public class Main {
         System.out.println();
 
         while (true) {
-            System.out.print("Remove order ['0' to go back]: ");
-            choice = Utils.scanAbsoluteInt(">> ");
+            choice = Utils.scanAbsoluteInt("Remove order ['0' to go back]: ");
 
+            if (choice == 0) {
+                return;
+            }
             if (choice < 1 || choice > cart.size()) {
                 System.out.println("Cannot find order");
                 continue;
