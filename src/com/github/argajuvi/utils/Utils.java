@@ -1,12 +1,19 @@
 package com.github.argajuvi.utils;
 
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Utils {
 
-    public final static Scanner SCANNER = new Scanner(System.in);
+    public final static Scanner SCANNER;
+    public final static DateTimeFormatter DATE_FORMATTER;
+
+    static {
+        SCANNER = new Scanner(System.in);
+        DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    }
 
     /**
      * Clears the console screen
