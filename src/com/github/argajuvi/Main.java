@@ -5,6 +5,7 @@ import com.github.argajuvi.models.product.BookProduct;
 import com.github.argajuvi.models.product.ClothingProduct;
 import com.github.argajuvi.models.product.FoodProduct;
 import com.github.argajuvi.models.product.Product;
+import com.github.argajuvi.models.receipt.Receipt;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 
@@ -322,6 +323,37 @@ public class Main {
         Utils.waitForEnter();
     }
 
+    private void showCheckout() {
+        Utils.clearScreen();
+
+        List<Order> cart = currentUser.getCart();
+        this.showCartView();
+
+        if (cart.isEmpty()) {
+            Utils.waitForEnter();
+            return;
+        }
+
+        boolean isConfirmed = Utils.scanAbsoluteConfirmation("Do you want to purchase those products? [y/n]: ");
+        if (!isConfirmed) {
+            return;
+        }
+
+        List<Order> orderList = new ArrayList<>(cart);
+        int totalOfTotalPrice = 0;
+
+        for (Order order : orderList) {
+            totalOfTotalPrice += order.getTotalPrice();
+        }
+
+        Receipt receipt = new Receipt(orderList, LocalDate.now(), totalOfTotalPrice);
+        currentUser.getReceiptList().add(receipt);
+        cart.clear();
+
+        System.out.println("Successfully purchase products!");
+        Utils.waitForEnter();
+    }
+
     private void showBuyProductsMenu() {
         while (true) {
             Utils.clearScreen();
@@ -341,7 +373,7 @@ public class Main {
                     this.showCartProducts();
                     break;
                 case 3:
-                    // TODO: initiate the purchase
+                    this.showCheckout();
                     break;
                 case 0:
                     return;

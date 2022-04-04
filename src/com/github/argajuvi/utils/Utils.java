@@ -44,6 +44,28 @@ public class Utils {
     }
 
     /**
+     * This function will scan for the absolute confirmation of 'yes or no' question.
+     * It only asks for 'y' for yes and 'n' for no. Anything else? Denied
+     * 
+     * @see Utils#scanAbsoluteInt(String)
+     */
+    public static boolean scanAbsoluteConfirmation(String prefix) {
+        while (true) {
+            System.out.print(prefix);
+
+            String errorMessage = "Input must be 'y' or 'n'";
+            String line = SCANNER.nextLine();
+
+            if (!line.equals("y") && !line.equals("n")) {
+                System.out.println(errorMessage);
+                continue;
+            }
+
+            return line.equals("y");
+        }
+    }
+
+    /**
      * Ever had those in console app where it says "Press enter to continue..."?
      * Yeah, this is it.
      */
