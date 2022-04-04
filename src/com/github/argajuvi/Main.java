@@ -94,14 +94,14 @@ public class Main {
                             break;
                         }
                     } else {
-                        System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
+                        System.out.println("Incorrect password! Make sure to enter the correct password next time!");
                         break;
                     }
                 }
             }
             // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA ARRAYLIST (DENGAN ARRAY OUT OF RANGE)
         } catch (Exception e) {
-            System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
+            System.out.println("Username doesn't exists! Make sure the account is registered!");
         }
     }
 
@@ -116,25 +116,25 @@ public class Main {
         do {
             // LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
             do {
-                System.out.print("Input New Username [>5 characters]: ");
+                System.out.print("Input new username [> 5 characters]: ");
                 username = scanner.nextLine();
-                System.out.print("Input New Password [>5 characters]: ");
+                System.out.print("Input new password [> 5 characters]: ");
                 password = scanner.nextLine();
             } while (username.length() < 5 || password.length() < 5);
+
             try {
                 for (int i = 0; i <= users.size(); i++) {
                     if (username.equals(users.get(i).getUsername())) {
-                        System.out.println("Username sudah ada, coba yang lain!");
+                        System.out.println("User has already been registered before, maybe try login with it?");
                         break;
                     }
                 }
             } catch (Exception e) {
                 registering = false;
             }
-
         } while (registering);
 
-        System.out.println("User berhasil didaftarkan!!");
+        System.out.println("User is successfully registered!");
         return new User(username, password);
     }
 
