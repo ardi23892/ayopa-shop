@@ -188,7 +188,7 @@ public class Main {
 
                 System.out.printf(
                         rowFormat,
-                        count + "", product.getName(), product.getPrice() + "", productType
+                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), productType
                 );
             }
 
@@ -234,14 +234,14 @@ public class Main {
                 System.out.printf(
                         rowFormat,
                         count + "",
-                        product.getName(), product.getPrice() + "", productType,
+                        product.getName(), Utils.formatPriceIDR(product.getPrice()), productType,
                         order.getQuantity() + "",
-                        order.getTotalPrice() + ""
+                        Utils.formatPriceIDR(order.getTotalPrice())
                 );
             }
 
             System.out.print(line);
-            System.out.printf("| %-46s | %-69s |\n" ,"Total Price", totalOfTotalPrice + "");
+            System.out.printf("| %-46s | %-69s |\n" ,"Total Price", Utils.formatPriceIDR(totalOfTotalPrice));
             System.out.print(line);
         }
     }

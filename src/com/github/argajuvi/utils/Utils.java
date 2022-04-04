@@ -1,5 +1,6 @@
 package com.github.argajuvi.utils;
 
+import java.text.NumberFormat;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -49,6 +50,16 @@ public class Utils {
     public static void waitForEnter() {
         System.out.print("Press enter to continue...");
         SCANNER.nextLine();
+    }
+
+    /**
+     * Formats the price (from integer) to IDR (Indonesian Rupiah) format.
+     */
+    public static String formatPriceIDR(int price) {
+        NumberFormat formatter = NumberFormat.getInstance();
+        String formattedPrice = formatter.format(price).replace(",", ".");
+
+        return "Rp " + formattedPrice + ",00";
     }
 
 }
