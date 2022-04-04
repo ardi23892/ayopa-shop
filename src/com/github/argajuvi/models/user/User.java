@@ -10,14 +10,21 @@ public class User {
 
     private final String username, password;
     private final List<Receipt> receiptList;
-    private final List<Order> currentCart;
+
+    /**
+     * As the user is ordering product, to simulate having a cart for each user,
+     * I'm using this list that stores each user's order and cleared it once they purchased the orders.
+     * <p>
+     * I'm taking the minimal approach to achieve that simulation, so that's why it's a list.
+     */
+    private final List<Order> cart;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
 
         this.receiptList = new ArrayList<>();
-        this.currentCart = new ArrayList<>();
+        this.cart = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -32,8 +39,8 @@ public class User {
         return receiptList;
     }
 
-    public List<Order> getCurrentCart() {
-        return currentCart;
+    public List<Order> getCart() {
+        return cart;
     }
 
 }
