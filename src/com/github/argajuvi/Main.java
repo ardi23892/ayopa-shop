@@ -24,7 +24,7 @@ public class Main {
         this.userList = new ArrayList<>();
 
         // PRE-REGISTER DATA ADMIN
-        userList.add(registerAdmin(userList));
+        userList.add(registerAdmin());
 
         while (true) {
             Utils.clearScreen();
@@ -144,11 +144,11 @@ public class Main {
     }
 
     //	PRE REGISTER DATA ADMIN
-    public User registerAdmin(List<User> users) {
+    public User registerAdmin() {
         return new User("admin", "admin123");
     }
 
-    private void showProducts() {
+    private void showProductsView() {
         if (productList.isEmpty()) {
             System.out.println("No products found.");
         } else {
@@ -182,9 +182,55 @@ public class Main {
         }
     }
 
+    private void showCartView() {
+        List<Order> cart = currentUser.getCart();
+
+        if (cart.isEmpty()) {
+            System.out.println("You haven't ordered anything.");
+        } else {
+            String rowFormat = "| %3s | %-40s | %-20s | %-12s | %8s | %-20s |\n";
+            String line = "----------------------------------------------------------------\n";
+            int count = 0;
+
+            System.out.print(line);
+            System.out.printf(
+                    rowFormat,
+                    "No.",
+                    "Product Name", "Product Price", "Product Type",
+                    "Quantity", "Total Price"
+            );
+            System.out.print(line);
+
+            for (Order order : cart) {
+                count++;
+
+                Product product = order.getProduct();
+                String productType = "Invalid";
+
+                if (product instanceof BookProduct) {
+                    productType = "Book";
+                } else if (product instanceof ClothingProduct) {
+                    productType = "Clothing";
+                } else if (product instanceof FoodProduct) {
+                    productType = "Food";
+                }
+
+                System.out.printf(
+                        rowFormat,
+                        count + "",
+                        product.getName(), product.getPrice() + "", productType,
+                        order.getQuantity() + "",
+                        order.getTotalPrice() + ""
+                );
+            }
+
+            System.out.print(line);
+        }
+    }
+
     private void showOrderProductMenu() {
         Utils.clearScreen();
-        this.showProducts();
+        this.showProductsView();
 
         if (productList.isEmpty()) {
             Utils.waitForEnter();
@@ -220,7 +266,40 @@ public class Main {
         }
 
         Order order = new Order(chosenProduct, quantity);
-        // TODO: add order to user's cart
+        currentUser.getCart().add(order);
+
+        System.out.println("Product is added to the cart!");
+        Utils.waitForEnter();
+    }
+
+    private void showCartProducts() {
+        Utils.clearScreen();
+
+        List<Order> cart = currentUser.getCart();
+        this.showCartView();
+
+        if (cart.isEmpty()) {
+            Utils.waitForEnter();
+            return;
+        }
+
+        int choice;
+        System.out.println();
+
+        while (true) {
+            System.out.print("Remove order ['0' to go back]: ");
+            choice = Utils.scanAbsoluteInt(">> ");
+
+            if (choice < 1 || choice > cart.size()) {
+                System.out.println("Cannot find order");
+                continue;
+            }
+
+            break;
+        }
+
+        cart.remove(choice - 1);
+        System.out.println("Successfully removed order from the cart");
 
         Utils.waitForEnter();
     }
@@ -241,7 +320,7 @@ public class Main {
                     this.showOrderProductMenu();
                     break;
                 case 2:
-                    // TODO: view current ordered products in the cart
+                    this.showCartProducts();
                     break;
                 case 3:
                     // TODO: initiate the purchase
