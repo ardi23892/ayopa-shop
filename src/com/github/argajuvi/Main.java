@@ -33,11 +33,11 @@ public class Main {
         productList.add(new BookProduct(
                 "Tate no Yusha no Nariagari Vol. 1", 317_102, 2013, "Aneko Yusagi"));
         productList.add(new FoodProduct(
-                "Lay's Sour Cream & Onion Flavored Potato Chips, 1 Ounce (Pack of 104)",
+                "Lay's, 1 Ounce (Pack of 104)",
                 831_476,
                 LocalDate.now().plus(1, ChronoUnit.MONTHS)));
         productList.add(new ClothingProduct(
-                "WANHONGYUE Anime Attack on Titan Shingeki no Kyojin Zip Hoodie Jacket Adult Cosplay Hooded Sweatshirt Coat",
+                "Shingeki no Kyojin Zip Hoodie",
                 387_792, 'L'));
 
         while (true) {
@@ -167,7 +167,7 @@ public class Main {
             System.out.println("No products found.");
         } else {
             String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
-            String line = "----------------------------------------------------------------\n";
+            String line = "----------------------------------------------------------------------------------------\n";
             int count = 0;
 
             System.out.print(line);
