@@ -203,7 +203,7 @@ public class Main {
             System.out.println("You haven't ordered anything.");
         } else {
             String rowFormat = "| %3s | %-40s | %-20s | %-12s | %8s | %-20s |\n";
-            String line = "----------------------------------------------------------------\n";
+            String line = "--------------------------------------------------------------------------------------------------------------------------\n";
             int count = 0;
 
             System.out.print(line);
@@ -215,6 +215,7 @@ public class Main {
             );
             System.out.print(line);
 
+            int totalOfTotalPrice = 0;
             for (Order order : cart) {
                 count++;
 
@@ -229,6 +230,7 @@ public class Main {
                     productType = "Food";
                 }
 
+                totalOfTotalPrice += order.getTotalPrice();
                 System.out.printf(
                         rowFormat,
                         count + "",
@@ -238,6 +240,8 @@ public class Main {
                 );
             }
 
+            System.out.print(line);
+            System.out.printf("| %-46s | %-69s |\n" ,"Total Price", totalOfTotalPrice + "");
             System.out.print(line);
         }
     }
@@ -270,7 +274,7 @@ public class Main {
         int quantity;
 
         while (true) {
-            quantity = Utils.scanAbsoluteInt(">> ");
+            quantity = Utils.scanAbsoluteInt("Product quantity: ");
             if (quantity < 1) {
                 System.out.println("Product quantity must be greater than 1");
                 continue;
