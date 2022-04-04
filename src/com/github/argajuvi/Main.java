@@ -178,18 +178,9 @@ public class Main {
             for (Product product : productList) {
                 count++;
 
-                String productType = "Invalid";
-                if (product instanceof BookProduct) {
-                    productType = "Book";
-                } else if (product instanceof ClothingProduct) {
-                    productType = "Clothing";
-                } else if (product instanceof FoodProduct) {
-                    productType = "Food";
-                }
-
                 System.out.printf(
                         rowFormat,
-                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), productType
+                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
                 );
             }
 
@@ -221,21 +212,12 @@ public class Main {
                 count++;
 
                 Product product = order.getProduct();
-                String productType = "Invalid";
-
-                if (product instanceof BookProduct) {
-                    productType = "Book";
-                } else if (product instanceof ClothingProduct) {
-                    productType = "Clothing";
-                } else if (product instanceof FoodProduct) {
-                    productType = "Food";
-                }
-
                 totalOfTotalPrice += order.getTotalPrice();
+
                 System.out.printf(
                         rowFormat,
                         count + "",
-                        product.getName(), Utils.formatPriceIDR(product.getPrice()), productType,
+                        product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName(),
                         order.getQuantity() + "",
                         Utils.formatPriceIDR(order.getTotalPrice())
                 );

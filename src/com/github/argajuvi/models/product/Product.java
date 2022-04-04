@@ -18,4 +18,18 @@ public abstract class Product {
         return price;
     }
 
+    public String getTypeName() {
+        String productType = "Invalid";
+
+        if (this instanceof BookProduct) {
+            productType = "Book";
+        } else if (this instanceof ClothingProduct) {
+            productType = "Clothing";
+        } else if (this instanceof FoodProduct) {
+            productType = "Food";
+        }
+
+        return productType;
+    }
+
 }
