@@ -95,6 +95,7 @@ public class Main {
                         }
                     } else {
                         System.out.println("Incorrect password! Make sure to enter the correct password next time!");
+                        Utils.waitForEnter();
                         break;
                     }
                 }
@@ -102,6 +103,7 @@ public class Main {
             // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA ARRAYLIST (DENGAN ARRAY OUT OF RANGE)
         } catch (Exception e) {
             System.out.println("Username doesn't exists! Make sure the account is registered!");
+            Utils.waitForEnter();
         }
     }
 
@@ -126,6 +128,7 @@ public class Main {
                 for (int i = 0; i <= users.size(); i++) {
                     if (username.equals(users.get(i).getUsername())) {
                         System.out.println("User has already been registered before, maybe try login with it?");
+                        Utils.waitForEnter();
                         break;
                     }
                 }
@@ -135,6 +138,8 @@ public class Main {
         } while (registering);
 
         System.out.println("User is successfully registered!");
+        Utils.waitForEnter();
+
         return new User(username, password);
     }
 
