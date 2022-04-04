@@ -17,6 +17,8 @@ public class Main {
     private final List<Product> productList;
     private final List<User> userList;
 
+    private User currentUser = null;
+
     public Main() {
         this.productList = new ArrayList<>();
         this.userList = new ArrayList<>();
@@ -70,6 +72,7 @@ public class Main {
         username = scanner.nextLine();
         System.out.print("Input Password: ");
         password = scanner.nextLine();
+
         // VALIDASI DATA LOGIN
         try {
             // LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
@@ -78,14 +81,16 @@ public class Main {
 
                 if (username.equals(user.getUsername())) {
                     if (password.equals(user.getPassword())) {
+                        currentUser = user;
+
                         // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
                         if (username.equals("admin")) {
                             // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
-                            System.out.println("Menu Admin");
+                            this.showAdminMenu();
                             break;
                         } else {
                             // SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
-                            System.out.println("Menu User");
+                            this.showUserMenu();
                             break;
                         }
                     } else {
@@ -94,7 +99,7 @@ public class Main {
                     }
                 }
             }
-            // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA VECTOR (DENGAN ARRAY OUT OF RANGE)
+            // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA ARRAYLIST (DENGAN ARRAY OUT OF RANGE)
         } catch (Exception e) {
             System.out.println("Username atau Password salah! Pastikan sudah melakukan registrasi!");
         }
@@ -251,7 +256,7 @@ public class Main {
             Utils.clearScreen();
 
             System.out.println(
-                    "Welcome, <NAME> to AyopaShop\n" +
+                    "Welcome, " + currentUser.getUsername() + " to AyopaShop\n" +
                     "-------------------------\n" +
                     "1. Check purchase history\n" +
                     "2. Buy products\n" +
@@ -267,8 +272,8 @@ public class Main {
                     this.showBuyProductsMenu();
                     break;
                 case 3:
-                    // TODO: logout from current user
-                    break;
+                    currentUser = null;
+                    return;
                 case 0:
                     System.exit(0);
                     break;
