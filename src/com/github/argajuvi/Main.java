@@ -8,6 +8,8 @@ import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,6 +27,18 @@ public class Main {
 
         // PRE-REGISTER DATA ADMIN
         userList.add(registerAdmin());
+
+        // (temp) Seed product data
+        productList.add(new BookProduct("Java OOP Done Right", 473_426, 2021, " Alan Mellor"));
+        productList.add(new BookProduct(
+                "Tate no Yusha no Nariagari Vol. 1", 317_102, 2013, "Aneko Yusagi"));
+        productList.add(new FoodProduct(
+                "Lay's Sour Cream & Onion Flavored Potato Chips, 1 Ounce (Pack of 104)",
+                831_476,
+                LocalDate.now().plus(1, ChronoUnit.MONTHS)));
+        productList.add(new ClothingProduct(
+                "WANHONGYUE Anime Attack on Titan Shingeki no Kyojin Zip Hoodie Jacket Adult Cosplay Hooded Sweatshirt Coat",
+                387_792, 'L'));
 
         while (true) {
             Utils.clearScreen();
