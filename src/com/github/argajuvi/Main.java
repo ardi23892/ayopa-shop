@@ -658,17 +658,22 @@ public class Main {
                     count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
             );
         }
+        System.out.print(line);
 
         int update = 0;
+        int price = 0;
         while(true) {
         	update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "]: ");
         	if(update >= 1 && update <= count) break;
         	else System.out.println("Your Input is Invalid");
         }
         
+        System.out.println("Product Name : " + productList.get(update - 1).getName());
+        price = Utils.scanAbsoluteInt("Update Price from " + productList.get(update - 1).getPrice() + " to ");
+        productList.get(update - 1).setPrice(price);
         
-        
-        System.out.print(line);
+        System.out.println("Successfully Updated!");
+        Utils.waitForEnter();
     }
     
     private void showProductMenu() {
