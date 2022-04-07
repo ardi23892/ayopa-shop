@@ -623,6 +623,7 @@ public class Main {
             	} 
             	productList.add(product);
                 System.out.println("Product successfully added");
+                Utils.waitForEnter();
             } else if (choice == 4) {
             	showProductMenu();
             } else if (choice == 5) {
@@ -633,7 +634,6 @@ public class Main {
             	
             }
             
-            Utils.waitForEnter();
         }
     }
     
@@ -680,12 +680,12 @@ public class Main {
     	if (productList.isEmpty()) {
             System.out.println("No products found.");
         } else {
-        	System.out.println("Show Product Menu\n");
-        	System.out.println("-----------------\n");
         	
         	while(true) {
         		Utils.clearScreen();
         		
+        		System.out.println("Show Product Menu\n");
+        		System.out.println("-----------------\n");
         		System.out.println(
         						"1. Show All Product\n" +
         						"2. Show Food Product\n" +
