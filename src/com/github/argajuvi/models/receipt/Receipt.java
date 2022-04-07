@@ -9,7 +9,7 @@ public class Receipt {
 
     /**
      * To be able to generate the {@link Receipt#id} automatically.
-     *
+     * <p>
      * We need a tracker that starts from {@code 1} and automatically increment
      * as more receipts are created.
      */

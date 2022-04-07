@@ -53,7 +53,7 @@ public class Utils {
     /**
      * This function will scan for the absolute confirmation of 'yes or no' question.
      * It only asks for 'y' for yes and 'n' for no. Anything else? Denied
-     * 
+     *
      * @see Utils#scanAbsoluteInt(String)
      */
     public static boolean scanAbsoluteConfirmation(String prefix) {

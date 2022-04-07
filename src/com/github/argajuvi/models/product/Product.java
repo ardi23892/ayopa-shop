@@ -19,10 +19,10 @@ public abstract class Product {
     }
 
     public void setPrice(int price) {
-		this.price = price;
-	}
+        this.price = price;
+    }
 
-	public String getTypeName() {
+    public String getTypeName() {
         String productType = "Invalid";
 
         if (this instanceof BookProduct) {
