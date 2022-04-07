@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sound.midi.Soundbank;
+
 public class Main {
 
     private final List<Product> productList;
@@ -624,15 +626,49 @@ public class Main {
             } else if (choice == 4) {
             	showProductMenu();
             } else if (choice == 5) {
-            	
+            	updateProduct();
             } else if (choice == 6) {
-            	
+            	deleteProduct();
             } else if (choice == 7) {
             	
             }
             
             Utils.waitForEnter();
         }
+    }
+    
+    private void deleteProduct() {
+    	
+    }
+    
+    private void updateProduct() {
+    	String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
+        String line = "----------------------------------------------------------------------------------------\n";
+        int count = 0;
+    	System.out.println("Update Product\n");
+        System.out.print(line);
+        System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+        System.out.print(line);
+
+        for (Product product : productList) {
+            count++;
+
+            System.out.printf(
+                    rowFormat,
+                    count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+            );
+        }
+
+        int update = 0;
+        while(true) {
+        	update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "]: ");
+        	if(update >= 1 && update <= count) break;
+        	else System.out.println("Your Input is Invalid");
+        }
+        
+        
+        
+        System.out.print(line);
     }
     
     private void showProductMenu() {
