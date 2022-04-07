@@ -45,14 +45,8 @@ public class Main {
         while (true) {
             Utils.clearScreen();
 
-            System.out.println(
-                    " █████╗ ██╗   ██╗ ██████╗ ██████╗  █████╗     ███████╗██╗  ██╗ ██████╗ ██████╗ \n" +
-                    "██╔══██╗╚██╗ ██╔╝██╔═══██╗██╔══██╗██╔══██╗    ██╔════╝██║  ██║██╔═══██╗██╔══██╗\n" +
-                    "███████║ ╚████╔╝ ██║   ██║██████╔╝███████║    ███████╗███████║██║   ██║██████╔╝\n" +
-                    "██╔══██║  ╚██╔╝  ██║   ██║██╔═══╝ ██╔══██║    ╚════██║██╔══██║██║   ██║██╔═══╝ \n" +
-                    "██║  ██║   ██║   ╚██████╔╝██║     ██║  ██║    ███████║██║  ██║╚██████╔╝██║     \n" +
-                    "╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     \n");
-
+            //deleted because of error
+       
             System.out.println(
                     "1. Login\n" +
                     "2. Register\n" +
@@ -521,6 +515,10 @@ public class Main {
                     "1. Add Clothing Product\n" +
                     "2. Add Food Product\n" +
                     "3. Add Book Product\n" +
+                    "4. Show Product List\n" +
+                    "5. Update Product\n" +
+                    "6. Delete Product\n" +
+                    "7. Show User List\n" +
                     "0. Logout\n");
 
             int choice = Utils.scanAbsoluteInt(">> ");
@@ -620,12 +618,57 @@ public class Main {
                 }
 
                 product = new BookProduct(productName, productPrice, publicationYear, author);
+            } else if (choice == 4) {
+            	showProductMenu();
+            } else if (choice == 5) {
+            	
+            } else if (choice == 6) {
+            	
+            } else if (choice == 7) {
+            	
             }
 
             productList.add(product);
             System.out.println("Product successfully added");
             Utils.waitForEnter();
         }
+    }
+    
+    private void showProductMenu() {
+    	if (productList.isEmpty()) {
+            System.out.println("No products found.");
+        } else {
+        	System.out.println("Show Product Menu\n");
+        	System.out.println("-----------------\n");
+        	
+        	while(true) {
+        		Utils.clearScreen();
+        		
+        		System.out.println(
+        						"1. Show All Product\n" +
+        						"2. Show Food Product\n" +
+        						"3. Show Clothing Product\n" +
+        						"4. Show Book Product\n" +
+        						"0. Back\n"
+        					);
+        		
+        		int choose = Utils.scanAbsoluteInt(">> ");
+        		
+        		if(choose == 0) return;
+        		else if(choose > 4 || choose < 1) {
+        			System.out.println("Your Input is Invalid");
+        		}
+        		
+        		showListProduct(choose);
+        	}
+        }
+    	
+    }
+    
+    private void showListProduct(int mode) {
+    	if(mode == 1) {
+    		return;
+    	}
     }
 
     public static void main(String[] args) {
