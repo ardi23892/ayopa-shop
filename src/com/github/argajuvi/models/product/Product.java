@@ -3,7 +3,7 @@ package com.github.argajuvi.models.product;
 public abstract class Product {
 
     private final String name;
-    private final int price;
+    private int price;
 
     public Product(String name, int price) {
         this.name = name;
@@ -18,7 +18,11 @@ public abstract class Product {
         return price;
     }
 
-    public String getTypeName() {
+    public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getTypeName() {
         String productType = "Invalid";
 
         if (this instanceof BookProduct) {
