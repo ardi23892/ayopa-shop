@@ -510,6 +510,7 @@ public class Main {
         while (true) {
             Utils.clearScreen();
 
+            Product product = null;
             System.out.println("Welcome Administrator\n" +
                     "-------------------------\n" +
                     "1. Add Clothing Product\n" +
@@ -527,97 +528,99 @@ public class Main {
                 currentUser = null;
                 return;
             }
-
-            String productName = null;
-            boolean isProductNameOk = false;
-
-            int productPrice = 0;
-            boolean isProductPriceOk = false;
-
-            while (!isProductNameOk) {
-                System.out.print("Input product name [ 2 - 40 characters ]: ");
-                productName = Utils.SCANNER.nextLine();
-
-                if (productName.length() < 2 || productName.length() > 40) {
-                    System.out.println("Product name only consists of 2 - 40 characters!");
-                } else isProductNameOk = true;
-            }
-
-            while (!isProductPriceOk) {
-                productPrice = Utils.scanAbsoluteInt("Input product price [ Minimum Rp 2 ]: Rp ");
-
-                if (productPrice < 2) {
-                    System.out.println("Read again. Minimum Rp 2!");
-                } else isProductPriceOk = true;
-            }
-
-            Product product = null;
-
-            if (choice == 1) {
-                char size = 0;
-                boolean isProductSizeOk = false;
-
-                while (!isProductSizeOk) {
-                    System.out.print("Input product size [ S/M/L ]: ");
-                    size = Utils.SCANNER.nextLine().charAt(0);
-
-                    if (size != 'S' && size != 'M' && size != 'L') {
-                        System.out.println("Only 'S' or 'M' or 'L'!");
-                    } else isProductSizeOk = true;
-                }
-
-                product = new ClothingProduct(productName, productPrice, size);
-            } else if (choice == 2) {
-                String strExpDate;
-                LocalDate expDate = null;
-                boolean isEXPDateOk = false;
-
-                LocalDate today = LocalDate.now();
-
-                while (!isEXPDateOk) {
-                    System.out.print("Input product expired date [ min 2 days from now; format dd-MM-yyyy ]: ");
-                    strExpDate = Utils.SCANNER.nextLine();
-
-                    try {
-                        expDate = LocalDate.parse(strExpDate, Utils.DATE_FORMATTER);
-
-                        if (expDate.isBefore(today.plusDays(2))) {
-                            System.out.println("Expired date must at least 2 days from now!");
-                        } else {
-                            isEXPDateOk = true;
-                            expDate = LocalDate.parse(strExpDate, Utils.DATE_FORMATTER);
-                        }
-                    } catch (DateTimeParseException ignored) {
-                        System.out.println("Wrong date format!");
-                    }
-                }
-
-                product = new FoodProduct(productName, productPrice, expDate);
-            } else if (choice == 3) {
-                int publicationYear = 0;
-                String author = null;
-                boolean isBookYearOk = false;
-
-                while (!isBookYearOk) {
-                    publicationYear = Utils.scanAbsoluteInt("Input book's year of publication [ min 1 ]: ");
-
-                    if (publicationYear < 1) {
-                        System.out.println("Minimum input is 1!");
-                    } else isBookYearOk = true;
-                }
-
-                boolean isAuthorOk = false;
-
-                while (!isAuthorOk) {
-                    System.out.print("Input author's name: ");
-                    author = Utils.SCANNER.nextLine();
-
-                    if (author.isEmpty()) {
-                        System.out.println("Author's name cannot be empty!");
-                    } else isAuthorOk = true;
-                }
-
-                product = new BookProduct(productName, productPrice, publicationYear, author);
+            
+            if (choice >= 1 && choice <= 3) {
+            	String productName = null;
+            	boolean isProductNameOk = false;
+            	
+            	int productPrice = 0;
+            	boolean isProductPriceOk = false;
+            	
+            	while (!isProductNameOk) {
+            		System.out.print("Input product name [ 2 - 40 characters ]: ");
+            		productName = Utils.SCANNER.nextLine();
+            		
+            		if (productName.length() < 2 || productName.length() > 40) {
+            			System.out.println("Product name only consists of 2 - 40 characters!");
+            		} else isProductNameOk = true;
+            	}
+            	
+            	while (!isProductPriceOk) {
+            		productPrice = Utils.scanAbsoluteInt("Input product price [ Minimum Rp 2 ]: Rp ");
+            		
+            		if (productPrice < 2) {
+            			System.out.println("Read again. Minimum Rp 2!");
+            		} else isProductPriceOk = true;
+            	}
+            	
+            	if (choice == 1) {
+            		char size = 0;
+            		boolean isProductSizeOk = false;
+            		
+            		while (!isProductSizeOk) {
+            			System.out.print("Input product size [ S/M/L ]: ");
+            			size = Utils.SCANNER.nextLine().charAt(0);
+            			
+            			if (size != 'S' && size != 'M' && size != 'L') {
+            				System.out.println("Only 'S' or 'M' or 'L'!");
+            			} else isProductSizeOk = true;
+            		}
+            		
+            		product = new ClothingProduct(productName, productPrice, size);
+            	} else if (choice == 2) {
+            		String strExpDate;
+            		LocalDate expDate = null;
+            		boolean isEXPDateOk = false;
+            		
+            		LocalDate today = LocalDate.now();
+            		
+            		while (!isEXPDateOk) {
+            			System.out.print("Input product expired date [ min 2 days from now; format dd-MM-yyyy ]: ");
+            			strExpDate = Utils.SCANNER.nextLine();
+            			
+            			try {
+            				expDate = LocalDate.parse(strExpDate, Utils.DATE_FORMATTER);
+            				
+            				if (expDate.isBefore(today.plusDays(2))) {
+            					System.out.println("Expired date must at least 2 days from now!");
+            				} else {
+            					isEXPDateOk = true;
+            					expDate = LocalDate.parse(strExpDate, Utils.DATE_FORMATTER);
+            				}
+            			} catch (DateTimeParseException ignored) {
+            				System.out.println("Wrong date format!");
+            			}
+            		}
+            		
+            		product = new FoodProduct(productName, productPrice, expDate);
+            	} else if (choice == 3) {
+            		int publicationYear = 0;
+            		String author = null;
+            		boolean isBookYearOk = false;
+            		
+            		while (!isBookYearOk) {
+            			publicationYear = Utils.scanAbsoluteInt("Input book's year of publication [ min 1 ]: ");
+            			
+            			if (publicationYear < 1) {
+            				System.out.println("Minimum input is 1!");
+            			} else isBookYearOk = true;
+            		}
+            		
+            		boolean isAuthorOk = false;
+            		
+            		while (!isAuthorOk) {
+            			System.out.print("Input author's name: ");
+            			author = Utils.SCANNER.nextLine();
+            			
+            			if (author.isEmpty()) {
+            				System.out.println("Author's name cannot be empty!");
+            			} else isAuthorOk = true;
+            		}
+            		
+            		product = new BookProduct(productName, productPrice, publicationYear, author);
+            	} 
+            	productList.add(product);
+                System.out.println("Product successfully added");
             } else if (choice == 4) {
             	showProductMenu();
             } else if (choice == 5) {
@@ -627,9 +630,7 @@ public class Main {
             } else if (choice == 7) {
             	
             }
-
-            productList.add(product);
-            System.out.println("Product successfully added");
+            
             Utils.waitForEnter();
         }
     }
@@ -744,6 +745,8 @@ public class Main {
 
             System.out.print(line);
     	}
+    	
+    	Utils.waitForEnter();
     	
     }
 
