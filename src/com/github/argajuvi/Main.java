@@ -8,6 +8,7 @@ import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.models.receipt.Receipt;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
+import com.sun.istack.internal.Nullable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -15,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -45,7 +47,13 @@ public class Main {
         while (true) {
             Utils.clearScreen();
 
-            //deleted because of error
+            System.out.println(
+                    " █████╗ ██╗   ██╗ ██████╗ ██████╗  █████╗     ███████╗██╗  ██╗ ██████╗ ██████╗ \n" +
+                    "██╔══██╗╚██╗ ██╔╝██╔═══██╗██╔══██╗██╔══██╗    ██╔════╝██║  ██║██╔═══██╗██╔══██╗\n" +
+                    "███████║ ╚████╔╝ ██║   ██║██████╔╝███████║    ███████╗███████║██║   ██║██████╔╝\n" +
+                    "██╔══██║  ╚██╔╝  ██║   ██║██╔═══╝ ██╔══██║    ╚════██║██╔══██║██║   ██║██╔═══╝ \n" +
+                    "██║  ██║   ██║   ╚██████╔╝██║     ██║  ██║    ███████║██║  ██║╚██████╔╝██║     \n" +
+                    "╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     \n");
 
             System.out.println(
                     "1. Login\n" +
@@ -158,7 +166,13 @@ public class Main {
         return new User("admin", "admin123");
     }
 
-    private void showProductsView() {
+    /**
+     * Shows the list of products in a table view
+     *
+     * @param filterType the type of product should be shown on the view,
+     *                   insert {@code null} to not use any filters
+     */
+    private void showProductsView(@Nullable Product.Type filterType) {
         if (productList.isEmpty()) {
             System.out.println("No products found.");
         } else {
@@ -170,17 +184,34 @@ public class Main {
             System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
             System.out.print(line);
 
-            for (Product product : productList) {
+            List<Product> filteredProductList = productList;
+            if (filterType != null) {
+                // Filters the product list to a specific type of product
+                filteredProductList = productList.stream()
+                        .filter(product -> product.getType() == filterType)
+                        .collect(Collectors.toList());
+            }
+
+            for (Product product : filteredProductList) {
                 count++;
 
                 System.out.printf(
                         rowFormat,
-                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+                        count + "", product.getName(),
+                        Utils.formatPriceIDR(product.getPrice()),
+                        product.getType().getName()
                 );
             }
 
             System.out.print(line);
         }
+    }
+
+    /**
+     * @see Main#showProductsView(Product.Type)
+     */
+    private void showProductsView() {
+        showProductsView(null);
     }
 
     private void showCartView() {
@@ -212,7 +243,8 @@ public class Main {
                 System.out.printf(
                         rowFormat,
                         count + "",
-                        product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName(),
+                        product.getName(),
+                        Utils.formatPriceIDR(product.getPrice()), product.getType().getName(),
                         order.getQuantity() + "",
                         Utils.formatPriceIDR(order.getTotalPrice())
                 );
@@ -447,7 +479,7 @@ public class Main {
                 Product product = order.getProduct();
 
                 count++;
-                System.out.println(count + ". [" + product.getTypeName() + "] " + product.getName());
+                System.out.println(count + ". [" + product.getType().getName() + "] " + product.getName());
                 System.out.println("   - Price       : " + Utils.formatPriceIDR(product.getPrice()));
 
                 if (product instanceof BookProduct) {
@@ -510,7 +542,7 @@ public class Main {
         while (true) {
             Utils.clearScreen();
 
-            Product product = null;
+            Product product;
             System.out.println("Welcome Administrator\n" +
                                "-------------------------\n" +
                                "1. Add Clothing Product\n" +
@@ -523,7 +555,6 @@ public class Main {
                                "0. Logout\n");
 
             int choice = Utils.scanAbsoluteInt(">> ");
-
             if (choice == 0) {
                 currentUser = null;
                 return;
@@ -593,7 +624,7 @@ public class Main {
                     }
 
                     product = new FoodProduct(productName, productPrice, expDate);
-                } else if (choice == 3) {
+                } else {
                     int publicationYear = 0;
                     String author = null;
                     boolean isBookYearOk = false;
@@ -671,7 +702,10 @@ public class Main {
 
             System.out.printf(
                     rowFormat,
-                    count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+                    count + "",
+                    product.getName(),
+                    Utils.formatPriceIDR(product.getPrice()),
+                    product.getType().getName()
             );
         }
         System.out.print(line);
@@ -705,13 +739,16 @@ public class Main {
 
             System.out.printf(
                     rowFormat,
-                    count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+                    count + "",
+                    product.getName(),
+                    Utils.formatPriceIDR(product.getPrice()),
+                    product.getType().getName()
             );
         }
         System.out.print(line);
 
-        int update = 0;
-        int price = 0;
+        int update;
+        int price;
         while (true) {
             update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "] (0 to back): ");
             if (update >= 1 && update <= count) break;
@@ -747,100 +784,26 @@ public class Main {
 
                 int choose = Utils.scanAbsoluteInt(">> ");
 
-                if (choose == 0) return;
-                else if (choose > 4 || choose < 1) {
+                if (choose == 0) {
+                    return;
+                }
+                if (choose < 1 || choose > 4) {
                     System.out.println("Your Input is Invalid");
+                    continue;
                 }
 
-                showListProduct(choose);
+                if (choose == 1) {
+                    System.out.println("All Products\n");
+                    this.showProductsView();
+                } else {
+                    Product.Type filter = Product.Type.values()[choose - 2];
+                    System.out.println(filter.getName() + " Products\n");
+                    this.showProductsView(filter);
+                }
+
+                Utils.waitForEnter();
             }
         }
-
-    }
-
-    private void showListProduct(int mode) {
-        String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
-        String line = "----------------------------------------------------------------------------------------\n";
-        int count = 0;
-
-        Utils.clearScreen();
-        if (mode == 1) {
-            System.out.println("All Product\n");
-            System.out.print(line);
-            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
-            System.out.print(line);
-
-            for (Product product : productList) {
-                count++;
-
-                System.out.printf(
-                        rowFormat,
-                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
-                );
-            }
-
-            System.out.print(line);
-        } else if (mode == 2) {
-            System.out.println("Food Product\n");
-            System.out.print(line);
-            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
-            System.out.print(line);
-
-            for (Product product : productList) {
-
-                if (product.getTypeName().equals("Food")) {
-                    count++;
-
-                    System.out.printf(
-                            rowFormat,
-                            count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
-                    );
-                }
-            }
-
-            System.out.print(line);
-        } else if (mode == 3) {
-            System.out.println("Clothing Product\n");
-            System.out.print(line);
-            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
-            System.out.print(line);
-
-            for (Product product : productList) {
-
-                if (product.getTypeName().equals("Clothing")) {
-                    count++;
-
-                    System.out.printf(
-                            rowFormat,
-                            count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
-                    );
-                }
-            }
-
-            System.out.print(line);
-        } else if (mode == 4) {
-            System.out.println("Book Product\n");
-            System.out.print(line);
-            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
-            System.out.print(line);
-
-            for (Product product : productList) {
-
-                if (product.getTypeName().equals("Book")) {
-                    count++;
-
-                    System.out.printf(
-                            rowFormat,
-                            count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
-                    );
-                }
-            }
-
-            System.out.print(line);
-        }
-
-        Utils.waitForEnter();
-
     }
 
     public static void main(String[] args) {
