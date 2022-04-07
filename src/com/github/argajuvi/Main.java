@@ -666,9 +666,85 @@ public class Main {
     }
     
     private void showListProduct(int mode) {
+    	String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
+        String line = "----------------------------------------------------------------------------------------\n";
+        int count = 0;
+        
     	if(mode == 1) {
-    		return;
+    		System.out.println("All Product\n");
+            System.out.print(line);
+            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.print(line);
+
+            for (Product product : productList) {
+                count++;
+
+                System.out.printf(
+                        rowFormat,
+                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+                );
+            }
+
+            System.out.print(line);
+    	}else if(mode == 2) {
+    		System.out.println("Food Product\n");
+            System.out.print(line);
+            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.print(line);
+
+            for (Product product : productList) {
+            	
+            	if(product.getTypeName().equals("Food")) {            		
+	                count++;
+	
+	                System.out.printf(
+	                        rowFormat,
+	                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+	                );
+            	}
+            }
+
+            System.out.print(line);
+    	}else if(mode == 3) {
+    		System.out.println("Clothing Product\n");
+            System.out.print(line);
+            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.print(line);
+
+            for (Product product : productList) {
+            	
+            	if(product.getTypeName().equals("Clothing")) {            		
+	                count++;
+	
+	                System.out.printf(
+	                        rowFormat,
+	                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+	                );
+            	}
+            }
+
+            System.out.print(line);
+    	}else if(mode == 4) {
+    		System.out.println("Book Product\n");
+            System.out.print(line);
+            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.print(line);
+
+            for (Product product : productList) {
+            	
+            	if(product.getTypeName().equals("Book")) {            		
+	                count++;
+	
+	                System.out.printf(
+	                        rowFormat,
+	                        count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+	                );
+            	}
+            }
+
+            System.out.print(line);
     	}
+    	
     }
 
     public static void main(String[] args) {
