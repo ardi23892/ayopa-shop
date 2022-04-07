@@ -12,36 +12,40 @@ import com.github.argajuvi.utils.Utils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
-    public static List<Product> productList = null;
-    public static List<User> userList = null;
+    public static List<Product> productList = Stream.of(
+            new BookProduct(
+                    "Java OOP Done Right",
+                    473_426,
+                    2021,
+                    " Alan Mellor"),
+            new BookProduct(
+                    "Tate no Yusha no Nariagari Vol. 1",
+                    317_102,
+                    2013,
+                    "Aneko Yusagi"),
+            new FoodProduct(
+                    "Lay's, 1 Ounce (Pack of 104)",
+                    831_476,
+                    LocalDate.now().plus(1, ChronoUnit.MONTHS)),
+            new ClothingProduct(
+                    "Shingeki no Kyojin Zip Hoodie",
+                    387_792,
+                    'L')
+    ).collect(Collectors.toList());
+    public static List<User> userList = Stream.of(
+            new User("admin", "admin123")
+    ).collect(Collectors.toList());
 
     public static User currentUser = null;
 
     public Main() {
-        productList = new ArrayList<>();
-        userList = new ArrayList<>();
-
-        // PRE-REGISTER DATA ADMIN
-        userList.add(registerAdmin());
-
-        // (temp) Seed product data
-        productList.add(new BookProduct("Java OOP Done Right", 473_426, 2021, " Alan Mellor"));
-        productList.add(new BookProduct(
-                "Tate no Yusha no Nariagari Vol. 1", 317_102, 2013, "Aneko Yusagi"));
-        productList.add(new FoodProduct(
-                "Lay's, 1 Ounce (Pack of 104)",
-                831_476,
-                LocalDate.now().plus(1, ChronoUnit.MONTHS)));
-        productList.add(new ClothingProduct(
-                "Shingeki no Kyojin Zip Hoodie",
-                387_792, 'L'));
-
         while (true) {
             Utils.clearScreen();
 
@@ -83,6 +87,7 @@ public class Main {
 
         String username;
         String password;
+        Menu menu;
 
         System.out.print("Input Username: ");
         username = scanner.nextLine();
@@ -102,15 +107,13 @@ public class Main {
                         // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
                         if (username.equals("admin")) {
                             // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
-//                            this.showAdminMenu();
-                            Menu adminMenu = new AdminMenu();
-                            adminMenu.showMenu();
+                            menu = new AdminMenu();
+                            menu.showMenu();
                             break;
                         } else {
                             // SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
-//                            this.showUserMenu();
-                            Menu userMenu = new UserMenu();
-                            userMenu.showMenu();
+                            menu = new UserMenu();
+                            menu.showMenu();
                             break;
                         }
                     } else {
@@ -161,11 +164,6 @@ public class Main {
         Utils.waitForEnter();
 
         return new User(username, password);
-    }
-
-    //	PRE REGISTER DATA ADMIN
-    public User registerAdmin() {
-        return new User("admin", "admin123");
     }
 
     public static void main(String[] args) {

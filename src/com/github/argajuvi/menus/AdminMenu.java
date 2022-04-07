@@ -7,6 +7,7 @@ import com.github.argajuvi.models.product.FoodProduct;
 import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
+import com.github.argajuvi.utils.Views;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -177,13 +178,11 @@ public class AdminMenu implements Menu{
 
                 if (choose == 1) {
                     System.out.println("All Products\n");
-//                    this.showProductsView();
-                    ProductMenu.showProductsView();
+                    Views.showProductsView();
                 } else {
                     Product.Type filter = Product.Type.values()[choose - 2];
                     System.out.println(filter.getName() + " Products\n");
-//                    this.showProductsView(filter);
-                    ProductMenu.showProductsView(filter);
+                    Views.showProductsView(filter);
                 }
 
                 Utils.waitForEnter();
