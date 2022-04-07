@@ -631,10 +631,32 @@ public class Main {
             } else if (choice == 6) {
             	deleteProduct();
             } else if (choice == 7) {
-            	
+            	showUserList();
             }
             
         }
+    }
+    
+    private void showUserList() {
+        if(userList.isEmpty()) {
+        	System.out.println("No users found.");
+        }else {
+        	String rowFormat = "| %3s | %-20s |\n";
+            String line = "------------------------------\n";
+            int count = 0;
+            
+            System.out.println("User List");
+            System.out.print(line);
+            
+            for(User user : userList) {
+            	System.out.printf(rowFormat, ++count, user.getUsername());
+            }
+            
+            System.out.print(line);
+            
+        }
+        
+        Utils.waitForEnter();
     }
     
     private void deleteProduct() {
