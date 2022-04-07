@@ -638,7 +638,37 @@ public class Main {
     }
     
     private void deleteProduct() {
-    	
+    	String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
+        String line = "----------------------------------------------------------------------------------------\n";
+        int count = 0;
+    	System.out.println("Delete Product\n");
+        System.out.print(line);
+        System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+        System.out.print(line);
+
+        for (Product product : productList) {
+            count++;
+
+            System.out.printf(
+                    rowFormat,
+                    count + "", product.getName(), Utils.formatPriceIDR(product.getPrice()), product.getTypeName()
+            );
+        }
+        System.out.print(line);
+
+        int del = 0;
+        while(true) {
+        	del = Utils.scanAbsoluteInt("Input the product id to be deleted [1 - " + count + "] (0 to delete): ");
+        	if(del >= 1 && del <= count) break;
+        	else if(del == 0) return; 
+        	else System.out.println("Your Input is Invalid");
+        }
+        
+        System.out.println(productList.get(del - 1).getName() + " has been deleted");
+        productList.remove(del - 1);
+        
+        System.out.println("Successfully Deleted!");
+        Utils.waitForEnter();
     }
     
     private void updateProduct() {
@@ -663,8 +693,9 @@ public class Main {
         int update = 0;
         int price = 0;
         while(true) {
-        	update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "]: ");
+        	update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "] (0 to back): ");
         	if(update >= 1 && update <= count) break;
+        	else if(update == 0) return;
         	else System.out.println("Your Input is Invalid");
         }
         
@@ -712,6 +743,7 @@ public class Main {
         String line = "----------------------------------------------------------------------------------------\n";
         int count = 0;
         
+        Utils.clearScreen();
     	if(mode == 1) {
     		System.out.println("All Product\n");
             System.out.print(line);
