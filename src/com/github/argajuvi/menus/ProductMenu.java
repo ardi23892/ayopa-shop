@@ -17,7 +17,7 @@ public class ProductMenu {
         Utils.clearScreen();
         Views.showProductsView();
 
-        if (Main.productList.isEmpty()) {
+        if (Main.PRODUCT_LIST.isEmpty()) {
             Utils.waitForEnter();
             return;
         }
@@ -29,7 +29,7 @@ public class ProductMenu {
             if (choice == 0) {
                 return;
             }
-            if (choice < 1 || choice > Main.productList.size()) {
+            if (choice < 1 || choice > Main.PRODUCT_LIST.size()) {
                 System.out.println("Cannot find product");
                 continue;
             }
@@ -37,7 +37,7 @@ public class ProductMenu {
             break;
         }
 
-        Product chosenProduct = Main.productList.get(choice - 1);
+        Product chosenProduct = Main.PRODUCT_LIST.get(choice - 1);
         int quantity;
 
         while (true) {
@@ -51,7 +51,7 @@ public class ProductMenu {
         }
 
         Order order = new Order(chosenProduct, quantity);
-        Main.currentUser.getCart().add(order);
+        Main.CURRENT_USER.getCart().add(order);
 
         System.out.println("Product is added to the cart!");
         Utils.waitForEnter();
@@ -60,7 +60,7 @@ public class ProductMenu {
     public static void showCartProducts() {
         Utils.clearScreen();
 
-        List<Order> cart = Main.currentUser.getCart();
+        List<Order> cart = Main.CURRENT_USER.getCart();
         Views.showCartView();
 
         if (cart.isEmpty()) {
@@ -94,7 +94,7 @@ public class ProductMenu {
     public static void showCheckout() {
         Utils.clearScreen();
 
-        List<Order> cart = Main.currentUser.getCart();
+        List<Order> cart = Main.CURRENT_USER.getCart();
         Views.showCartView();
 
         if (cart.isEmpty()) {
@@ -115,7 +115,7 @@ public class ProductMenu {
         }
 
         Receipt receipt = new Receipt(orderList, LocalDate.now(), totalOfTotalPrice);
-        Main.currentUser.getReceiptList().add(receipt);
+        Main.CURRENT_USER.getReceiptList().add(receipt);
         cart.clear();
 
         System.out.println("Successfully purchase products!");

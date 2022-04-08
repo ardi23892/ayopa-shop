@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 public class Main {
 
-    public static List<Product> productList = Stream.of(
+    public static List<Product> PRODUCT_LIST = Stream.of(
             new BookProduct(
                     "Java OOP Done Right",
                     473_426,
@@ -39,11 +39,11 @@ public class Main {
                     387_792,
                     'L')
     ).collect(Collectors.toList());
-    public static List<User> userList = Stream.of(
+    public static List<User> USER_LIST = Stream.of(
             new User("admin", "admin123")
     ).collect(Collectors.toList());
 
-    public static User currentUser = null;
+    public static User CURRENT_USER = null;
 
     public Main() {
         while (true) {
@@ -65,10 +65,10 @@ public class Main {
             int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
                 case 1:
-                    loginUser(userList);
+                    loginUser(USER_LIST);
                     break;
                 case 2:
-                    userList.add(registerUser(userList));
+                    USER_LIST.add(registerUser(USER_LIST));
                     break;
                 case 0:
                     System.exit(0);
@@ -102,7 +102,7 @@ public class Main {
 
                 if (username.equals(user.getUsername())) {
                     if (password.equals(user.getPassword())) {
-                        currentUser = user;
+                        CURRENT_USER = user;
 
                         // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
                         if (username.equals("admin")) {

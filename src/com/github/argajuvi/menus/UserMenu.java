@@ -11,7 +11,7 @@ public class UserMenu implements Menu{
             Utils.clearScreen();
 
             System.out.println(
-                    "Welcome, " + Main.currentUser.getUsername() + " to AyopaShop\n" +
+                    "Welcome, " + Main.CURRENT_USER.getUsername() + " to AyopaShop\n" +
                             "-------------------------\n" +
                             "1. Check purchase history\n" +
                             "2. Buy products\n" +
@@ -28,7 +28,7 @@ public class UserMenu implements Menu{
                     this.showBuyProductsMenu();
                     break;
                 case 3:
-                    Main.currentUser = null;
+                    Main.CURRENT_USER = null;
                     return;
                 case 0:
                     System.exit(0);

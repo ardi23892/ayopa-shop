@@ -17,7 +17,7 @@ public class Views {
      *                   insert {@code null} to not use any filters
      */
     public static void showProductsView(@Nullable Product.Type filterType) {
-        if (Main.productList.isEmpty()) {
+        if (Main.PRODUCT_LIST.isEmpty()) {
             System.out.println("No products found.");
         } else {
             String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
@@ -28,10 +28,10 @@ public class Views {
             System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
             System.out.print(line);
 
-            List<Product> filteredProductList = Main.productList;
+            List<Product> filteredProductList = Main.PRODUCT_LIST;
             if (filterType != null) {
                 // Filters the product list to a specific type of product
-                filteredProductList = Main.productList.stream()
+                filteredProductList = Main.PRODUCT_LIST.stream()
                         .filter(product -> product.getType() == filterType)
                         .collect(Collectors.toList());
             }
@@ -59,7 +59,7 @@ public class Views {
     }
 
     public static void showCartView() {
-        List<Order> cart = Main.currentUser.getCart();
+        List<Order> cart = Main.CURRENT_USER.getCart();
 
         if (cart.isEmpty()) {
             System.out.println("You haven't ordered anything.");

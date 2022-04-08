@@ -18,7 +18,7 @@ public class ReceiptMenu implements Menu{
         while (true) {
             Utils.clearScreen();
 
-            List<Receipt> receiptList = Main.currentUser.getReceiptList();
+            List<Receipt> receiptList = Main.CURRENT_USER.getReceiptList();
             this.showReceiptsView();
 
             if (receiptList.isEmpty()) {
@@ -97,7 +97,7 @@ public class ReceiptMenu implements Menu{
     }
 
     private void showReceiptsView() {
-        List<Receipt> receiptList = Main.currentUser.getReceiptList();
+        List<Receipt> receiptList = Main.CURRENT_USER.getReceiptList();
 
         if (receiptList.isEmpty()) {
             System.out.println("You haven't purchase anything from our shop.");

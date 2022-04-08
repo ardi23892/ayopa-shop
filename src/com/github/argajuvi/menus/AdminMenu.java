@@ -32,7 +32,7 @@ public class AdminMenu implements Menu{
 
             int choice = Utils.scanAbsoluteInt(">> ");
             if (choice == 0) {
-                Main.currentUser = null;
+                Main.CURRENT_USER = null;
                 return;
             }
 
@@ -143,13 +143,13 @@ public class AdminMenu implements Menu{
             product = new BookProduct(productName, productPrice, publicationYear, author);
         }
 
-        Main.productList.add(product);
+        Main.PRODUCT_LIST.add(product);
         System.out.println("Product successfully added");
         Utils.waitForEnter();
     }
 
     private void showProductMenu() {
-        if (Main.productList.isEmpty()) {
+        if (Main.PRODUCT_LIST.isEmpty()) {
             System.out.println("No products found.");
         } else {
 
@@ -199,7 +199,7 @@ public class AdminMenu implements Menu{
         System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
         System.out.print(line);
 
-        for (Product product : Main.productList) {
+        for (Product product : Main.PRODUCT_LIST) {
             count++;
 
             System.out.printf(
@@ -221,9 +221,9 @@ public class AdminMenu implements Menu{
             else System.out.println("Your Input is Invalid");
         }
 
-        System.out.println("Product Name : " + Main.productList.get(update - 1).getName());
-        price = Utils.scanAbsoluteInt("Update Price from " + Main.productList.get(update - 1).getPrice() + " to ");
-        Main.productList.get(update - 1).setPrice(price);
+        System.out.println("Product Name : " + Main.PRODUCT_LIST.get(update - 1).getName());
+        price = Utils.scanAbsoluteInt("Update Price from " + Main.PRODUCT_LIST.get(update - 1).getPrice() + " to ");
+        Main.PRODUCT_LIST.get(update - 1).setPrice(price);
 
         System.out.println("Successfully Updated!");
         Utils.waitForEnter();
@@ -238,7 +238,7 @@ public class AdminMenu implements Menu{
         System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
         System.out.print(line);
 
-        for (Product product : Main.productList) {
+        for (Product product : Main.PRODUCT_LIST) {
             count++;
 
             System.out.printf(
@@ -259,15 +259,15 @@ public class AdminMenu implements Menu{
             else System.out.println("Your Input is Invalid");
         }
 
-        System.out.println(Main.productList.get(del - 1).getName() + " has been deleted");
-        Main.productList.remove(del - 1);
+        System.out.println(Main.PRODUCT_LIST.get(del - 1).getName() + " has been deleted");
+        Main.PRODUCT_LIST.remove(del - 1);
 
         System.out.println("Successfully Deleted!");
         Utils.waitForEnter();
     }
 
     private void showUserList() {
-        if (Main.userList.isEmpty()) {
+        if (Main.USER_LIST.isEmpty()) {
             System.out.println("No users found.");
         } else {
             String rowFormat = "| %3s | %-20s |\n";
@@ -277,7 +277,7 @@ public class AdminMenu implements Menu{
             System.out.println("User List");
             System.out.print(line);
 
-            for (User user : Main.userList) {
+            for (User user : Main.USER_LIST) {
                 System.out.printf(rowFormat, ++count, user.getUsername());
             }
 
