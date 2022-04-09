@@ -15,8 +15,7 @@ public class UserMenu implements Menu {
                     "-------------------------\n" +
                     "1. Check purchase history\n" +
                     "2. Buy products\n" +
-                    "3. Logout\n" +
-                    "0. Exit\n");
+                    "0. Logout\n");
 
             int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {
@@ -27,12 +26,9 @@ public class UserMenu implements Menu {
                 case 2:
                     this.showBuyProductsMenu();
                     break;
-                case 3:
+                case 0:
                     Main.CURRENT_USER = null;
                     return;
-                case 0:
-                    System.exit(0);
-                    break;
                 default:
                     System.out.println("Option is not available!");
                     Utils.waitForEnter();
