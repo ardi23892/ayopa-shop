@@ -3,7 +3,7 @@ package com.github.argajuvi.menus;
 import com.github.argajuvi.Main;
 import com.github.argajuvi.utils.Utils;
 
-public class UserMenu implements Menu{
+public class UserMenu implements Menu {
 
     @Override
     public void showMenu() {
@@ -12,11 +12,11 @@ public class UserMenu implements Menu{
 
             System.out.println(
                     "Welcome, " + Main.CURRENT_USER.getUsername() + " to AyopaShop\n" +
-                            "-------------------------\n" +
-                            "1. Check purchase history\n" +
-                            "2. Buy products\n" +
-                            "3. Logout\n" +
-                            "0. Exit\n");
+                    "-------------------------\n" +
+                    "1. Check purchase history\n" +
+                    "2. Buy products\n" +
+                    "3. Logout\n" +
+                    "0. Exit\n");
 
             int choice = Utils.scanAbsoluteInt(">> ");
             switch (choice) {

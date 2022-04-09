@@ -11,7 +11,7 @@ import com.github.argajuvi.utils.Utils;
 
 import java.util.List;
 
-public class ReceiptMenu implements Menu{
+public class ReceiptMenu implements Menu {
 
     @Override
     public void showMenu() {

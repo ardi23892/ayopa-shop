@@ -12,7 +12,7 @@ import com.github.argajuvi.utils.Views;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class AdminMenu implements Menu{
+public class AdminMenu implements Menu {
 
     @Override
     public void showMenu() {
@@ -20,15 +20,15 @@ public class AdminMenu implements Menu{
             Utils.clearScreen();
 
             System.out.println("Welcome Administrator\n" +
-                    "-------------------------\n" +
-                    "1. Add Clothing Product\n" +
-                    "2. Add Food Product\n" +
-                    "3. Add Book Product\n" +
-                    "4. Show Product List\n" +
-                    "5. Update Product\n" +
-                    "6. Delete Product\n" +
-                    "7. Show User List\n" +
-                    "0. Logout\n");
+                               "-------------------------\n" +
+                               "1. Add Clothing Product\n" +
+                               "2. Add Food Product\n" +
+                               "3. Add Book Product\n" +
+                               "4. Show Product List\n" +
+                               "5. Update Product\n" +
+                               "6. Delete Product\n" +
+                               "7. Show User List\n" +
+                               "0. Logout\n");
 
             int choice = Utils.scanAbsoluteInt(">> ");
             if (choice == 0) {
@@ -160,10 +160,10 @@ public class AdminMenu implements Menu{
                 System.out.println("-----------------\n");
                 System.out.println(
                         "1. Show All Product\n" +
-                                "2. Show Food Product\n" +
-                                "3. Show Clothing Product\n" +
-                                "4. Show Book Product\n" +
-                                "0. Back\n"
+                        "2. Show Food Product\n" +
+                        "3. Show Clothing Product\n" +
+                        "4. Show Book Product\n" +
+                        "0. Back\n"
                 );
 
                 int choose = Utils.scanAbsoluteInt(">> ");
