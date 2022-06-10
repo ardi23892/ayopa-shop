@@ -38,6 +38,8 @@ public class Main {
                     387_792,
                     'L')
     ).collect(Collectors.toList());
+    
+    
 
     public static List<User> USER_LIST = Stream.of(
             new User("admin", "admin123"),

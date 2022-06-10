@@ -66,41 +66,46 @@ public class InitialMenu implements Menu {
         username = scanner.nextLine();
         System.out.print("Input Password: ");
         password = scanner.nextLine();
-
-        // VALIDASI DATA LOGIN
+        
+        //VALIDASI DATA LOGIN
+        String query;
+        
+        query = "SELECT * FROM users WHERE username = ?";
+        PreparedStatement ps = db.prepareStatement(query);
+        boolean usernameCheck = false;
+        String currPassword = "";
+        
         try {
-            // LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
-            for (int i = 0; i <= users.size(); i++) {
-                User user = users.get(i);
-
-                if (username.equals(user.getUsername())) {
-                    if (password.equals(user.getPassword())) {
-                        Main.CURRENT_USER = user;
-
-                        // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
-                        if (username.equals("admin")) {
-                            // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
-                            menu = new AdminMenu();
-                            menu.showMenu();
-                            break;
-                        } else {
-                            // SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
-                            menu = new UserMenu();
-                            menu.showMenu();
-                            break;
-                        }
-                    } else {
-                        System.out.println("Incorrect password! Make sure to enter the correct password next time!");
-                        Utils.waitForEnter();
-                        break;
-                    }
-                }
-            }
-            // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA ARRAYLIST (DENGAN ARRAY OUT OF RANGE)
-        } catch (Exception e) {
-            System.out.println("Username doesn't exists! Make sure the account is registered!");
-            Utils.waitForEnter();
+        	ps.setString(1, username);
+			ResultSet result = (ResultSet) ps.executeQuery();
+			while(result.next()) {
+				//USERNAME DITEMUKAN
+				usernameCheck = true;
+				currPassword = result.getString("password");
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+        
+        if(!usernameCheck){
+        	System.out.println("Username doesn't exists! Make sure the account is registered!");
+        	Utils.waitForEnter();
         }
+        
+        
+        if(currPassword.equals(password)) {
+        	if(username.equals("admin")) {
+				menu = new AdminMenu();
+			}else {
+				menu = new UserMenu();
+			}
+        	
+        	User currUser = new User(username, password);
+        	
+        	Main.CURRENT_USER = currUser;
+        	menu.showMenu();
+        }
+   
     }
 
     //	FUNCTION REGISTER DATA USER BARU
@@ -120,31 +125,27 @@ public class InitialMenu implements Menu {
                 password = scanner.nextLine();
             } while (username.length() < 5 || password.length() < 5);
 
-            try {
-                for (int i = 0; i <= users.size(); i++) {
-                    if (username.equals(users.get(i).getUsername())) {
-                        System.out.println("User has already been registered before, maybe try login with it?");
-                        Utils.waitForEnter();
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                registering = false;
-            }
+            User newUser = new User(username, password);
+            registering = insertUser(newUser);
+            
         } while (registering);
 
         System.out.println("User is successfully registered!");
         Utils.waitForEnter();
         
-        //Insert Query with Unique user
-        String query;
+        return new User(username, password);
+    }
+    
+    //Insert Query with Unique user
+    public boolean insertUser(User newUser) {
+    	String query;
         
         query = "SELECT * FROM users WHERE username = ?";
         PreparedStatement ps = db.prepareStatement(query);
         
         boolean isUnique = true;
         try {
-        	ps.setString(1, username);
+        	ps.setString(1, newUser.getUsername());
 			ResultSet result = (ResultSet) ps.executeQuery();
 			while(result.next()) {
 				isUnique = false;
@@ -154,12 +155,13 @@ public class InitialMenu implements Menu {
 		}
         
         if(isUnique) {
+        	
         	query = "INSERT INTO users VALUES(NULL, ?, ?)";
             ps = db.prepareStatement(query);
             
             try {
-    			ps.setString(1, username);
-    			ps.setString(2, password);
+    			ps.setString(1, newUser.getUsername());
+    			ps.setString(2, newUser.getPassword());
     			ps.executeUpdate();
     		} catch (SQLException e) {
     			e.printStackTrace();
@@ -167,9 +169,9 @@ public class InitialMenu implements Menu {
         }else {
         	System.out.println("User has already been registered before, maybe try login with it?");
             Utils.waitForEnter();
+            return true;
         }
-
-        return new User(username, password);
+        return false;
     }
 
 }
