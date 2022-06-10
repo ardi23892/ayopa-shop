@@ -5,7 +5,7 @@ import com.github.argajuvi.models.product.Product;
 public class Order {
 
     private final Product product;
-    private int quantity;
+    private final int quantity;
 
     public Order(Product product, int quantity) {
         this.product = product;
@@ -18,10 +18,6 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public int getTotalPrice() {
