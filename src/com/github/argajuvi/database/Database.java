@@ -2,6 +2,8 @@ package com.github.argajuvi.database;
 
 import java.sql.*;
 
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
 public class Database {
 
     private static Database instance;
@@ -68,6 +70,16 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public PreparedStatement prepareStatement(String query) {
+    	PreparedStatement ps = null;
+    	try {
+			ps = conn.prepareStatement(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return ps;
     }
 
 }

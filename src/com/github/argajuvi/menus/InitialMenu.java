@@ -4,7 +4,10 @@ import com.github.argajuvi.Main;
 import com.github.argajuvi.database.Database;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
+import com.mysql.jdbc.ResultSet;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -132,6 +135,39 @@ public class InitialMenu implements Menu {
 
         System.out.println("User is successfully registered!");
         Utils.waitForEnter();
+        
+        //Insert Query with Unique user
+        String query;
+        
+        query = "SELECT * FROM users WHERE username = ?";
+        PreparedStatement ps = db.prepareStatement(query);
+        
+        boolean isUnique = true;
+        try {
+        	ps.setString(1, username);
+			ResultSet result = (ResultSet) ps.executeQuery();
+			while(result.next()) {
+				isUnique = false;
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+        
+        if(isUnique) {
+        	query = "INSERT INTO users VALUES(NULL, ?, ?)";
+            ps = db.prepareStatement(query);
+            
+            try {
+    			ps.setString(1, username);
+    			ps.setString(2, password);
+    			ps.executeUpdate();
+    		} catch (SQLException e) {
+    			e.printStackTrace();
+    		}
+        }else {
+        	System.out.println("User has already been registered before, maybe try login with it?");
+            Utils.waitForEnter();
+        }
 
         return new User(username, password);
     }
