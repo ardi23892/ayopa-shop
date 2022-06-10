@@ -4,18 +4,18 @@ public abstract class Product {
 
     private final String name;
     private int price;
-    private final Type type;
+    private final ProductType type;
 
     public Product(String name, int price) {
         this.name = name;
         this.price = price;
 
         if (this instanceof FoodProduct) {
-            this.type = Type.FOOD;
+            this.type = ProductType.FOOD;
         } else if (this instanceof BookProduct) {
-            this.type = Type.BOOK;
+            this.type = ProductType.BOOK;
         } else if (this instanceof ClothingProduct) {
-            this.type = Type.CLOTHING;
+            this.type = ProductType.CLOTHING;
         } else {
             throw new IllegalStateException("Invalid product type!");
         }
@@ -33,26 +33,8 @@ public abstract class Product {
         this.price = price;
     }
 
-    public Type getType() {
+    public ProductType getType() {
         return type;
-    }
-
-    public enum Type {
-
-        FOOD("Food"),
-        CLOTHING("Clothing"),
-        BOOK("Book");
-
-        private final String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
     }
 
 }

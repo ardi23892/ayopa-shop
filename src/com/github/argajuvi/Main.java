@@ -54,5 +54,3 @@ public class Main {
     }
 
 }
-
-// Testing design-pattern branch commit
