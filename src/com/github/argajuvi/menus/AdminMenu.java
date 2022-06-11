@@ -1,10 +1,7 @@
 package com.github.argajuvi.menus;
 
 import com.github.argajuvi.Main;
-import com.github.argajuvi.models.product.BookProduct;
-import com.github.argajuvi.models.product.ClothingProduct;
-import com.github.argajuvi.models.product.FoodProduct;
-import com.github.argajuvi.models.product.Product;
+import com.github.argajuvi.models.product.*;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
@@ -76,6 +73,7 @@ public class AdminMenu implements Menu {
         }
 
         Product product;
+
         if (choice == 1) {
             char size = 0;
             boolean isProductSizeOk = false;
@@ -89,7 +87,7 @@ public class AdminMenu implements Menu {
                 } else isProductSizeOk = true;
             }
 
-            product = new ClothingProduct(productName, productPrice, size);
+            product = ProductFactory.createClothProduct(productName, productPrice, size);
         } else if (choice == 2) {
             String strExpDate;
             LocalDate expDate = null;
@@ -115,7 +113,7 @@ public class AdminMenu implements Menu {
                 }
             }
 
-            product = new FoodProduct(productName, productPrice, expDate);
+            product = ProductFactory.createFoodProduct(productName, productPrice, expDate);
         } else {
             int publicationYear = 0;
             String author = null;
@@ -140,7 +138,7 @@ public class AdminMenu implements Menu {
                 } else isAuthorOk = true;
             }
 
-            product = new BookProduct(productName, productPrice, publicationYear, author);
+            product = ProductFactory.createBookProduct(productName, productPrice, publicationYear, author);
         }
 
         Main.PRODUCT_LIST.add(product);
@@ -180,7 +178,7 @@ public class AdminMenu implements Menu {
                     System.out.println("All Products\n");
                     Views.showProductsView();
                 } else {
-                    Product.Type filter = Product.Type.values()[choose - 2];
+                    ProductType filter = ProductType.values()[choose - 2];
                     System.out.println(filter.getName() + " Products\n");
                     Views.showProductsView(filter);
                 }
