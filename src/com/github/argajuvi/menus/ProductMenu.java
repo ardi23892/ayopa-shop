@@ -79,8 +79,7 @@ public class ProductMenu {
             break;
         }
 
-        Order order = new Order(chosenProduct, quantity);
-        Main.CURRENT_USER.getCart().add(order);
+        
         
         //masukkan ke db
         //masukin ke receipt dengan status pending (0), purchase_date masih null
@@ -121,6 +120,22 @@ public class ProductMenu {
         }
         
         db.execute("INSERT INTO orders VALUES(NULL, ?, ?, ?)", receiptId, chosenProduct.getID(), quantity);
+        
+        ResultSet rs;
+        int idOrder = 0;
+		try {
+			rs = db.getResults("SELECT * FROM orders WHERE receiptId = ?", receiptId);
+			int countOrder = Main.CURRENT_USER.getCart().size();
+	        int count = 0;
+	        while(rs.next()) {
+	        	count++;
+	        	if(countOrder == count) idOrder = rs.getInt("id");
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}        
+        Order order = new Order(idOrder, chosenProduct, quantity);
+        Main.CURRENT_USER.getCart().add(order);
 
         System.out.println("Product is added to the cart!");
         Utils.waitForEnter();
@@ -154,6 +169,11 @@ public class ProductMenu {
             break;
         }
 
+        //hapus dari db ketika name dan quantity sama
+        int idOrder = cart.get(choice - 1).getId(); 
+        Database db = Database.getInstance();
+        db.execute("DELETE FROM orders WHERE id = ?", idOrder);
+        
         cart.remove(choice - 1);
         System.out.println("Successfully removed order from the cart");
 

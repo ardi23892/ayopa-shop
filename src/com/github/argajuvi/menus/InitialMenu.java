@@ -16,10 +16,10 @@ import javax.jws.soap.SOAPBinding.Use;
 public class InitialMenu implements Menu {
 
 	Database db = Database.getInstance();
+	List<User> userList = Main.USER_LIST;
 	
     @Override
     public void showMenu() throws ParseException {
-        List<User> userList = Main.USER_LIST;
 
         while (true) {
             Utils.clearScreen();
@@ -75,12 +75,16 @@ public class InitialMenu implements Menu {
         boolean usernameCheck = false;
         String currPassword = "";
         
+        int userIdx = 0;
         try {
         	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", username);
 			while(rs.next()) {
 				//USERNAME DITEMUKAN
 				Main.userId = rs.getInt("id");
 				usernameCheck = true;
+				for(int i = 0; i < userList.size(); i++) {
+					if(username.equals(userList.get(i).getUsername())) userIdx = i;
+				}
 				currPassword = rs.getString("password");
 			}
 		} catch (SQLException e1) {
@@ -100,9 +104,7 @@ public class InitialMenu implements Menu {
 				menu = new UserMenu();
 			}
         	
-        	User currUser = new User(username, password);
-        	
-        	Main.CURRENT_USER = currUser;
+        	Main.CURRENT_USER = userList.get(userIdx);
         	menu.showMenu();
         }
    

@@ -86,7 +86,7 @@ public class Views {
 
                 System.out.printf(
                         rowFormat,
-                        product.getID() + "",
+                        count + "",
                         product.getName(),
                         Utils.formatPriceIDR(product.getPrice()), product.getType().getName(),
                         order.getQuantity() + "",

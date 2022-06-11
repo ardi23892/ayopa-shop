@@ -193,29 +193,47 @@ public class Main {
 			String password = "";
 			
 			while(rs.next()) {
-				userIdx++;
 				int userId = rs.getInt("id");
 				username = rs.getString("username");
 				password = rs.getString("password");
 				
 				USER_LIST.add(new User(username, password));
 				
-				//cek product dan receipt nya
+				//cek product dan receipt nya, yang receiptnya sudah di checkout
 				ResultSet rsReceipt = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 1", userId);
 				while(rsReceipt.next()) {
 					int receiptId = rsReceipt.getInt("id");
 					ResultSet rsOrder = db.getResults("SELECT * FROM orders WHERE receipt_id = ? ", receiptId);
 					List<Order>newOrder = new ArrayList<>();
 					while(rsOrder.next()) {
+						int orderId = rsOrder.getInt("id");
 						int productId = rsOrder.getInt("product_id");
 						int quantity = rsOrder.getInt("quantity");
-						newOrder.add(new Order(PRODUCT_LIST.get(productMap.get(productId)), quantity));
+						newOrder.add(new Order(orderId, PRODUCT_LIST.get(productMap.get(productId)), quantity));
 					}
 					Date purchaseDate = rsReceipt.getDate("purchase_date");
 					int totalPrice = rsReceipt.getInt("total_price");
 					USER_LIST.get(userIdx).getReceiptList().add(new Receipt(newOrder, purchaseDate, totalPrice));
+					System.out.println("TestCheckOut");
 				}
 				
+				//cek product dan receiptnya, yang reciptnya belum di checkout (cart)
+				rsReceipt = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", userId);
+				while(rsReceipt.next()) {
+					int receiptId = rsReceipt.getInt("id");
+					ResultSet rsOrder = db.getResults("SELECT * FROM orders WHERE receipt_id = ?", receiptId);
+					while(rsOrder.next()) {
+						int orderId = rsOrder.getInt("id");
+						int productId = rsOrder.getInt("product_id");
+						int quantity = rsOrder.getInt("quantity");
+						USER_LIST.get(userIdx).getCart().add(new Order(orderId, PRODUCT_LIST.get(productMap.get(productId)), quantity));
+//						System.out.println("TestCart, userIdx = " + userIdx);
+					}
+				}
+//				for(int x = 0; x < 3; x++) {
+//					System.out.println(USER_LIST.get(userIdx).getCart().get(x).getProduct().getName());
+//				}
+				userIdx++;
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
