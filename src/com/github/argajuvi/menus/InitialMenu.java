@@ -79,6 +79,7 @@ public class InitialMenu implements Menu {
         	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", username);
 			while(rs.next()) {
 				//USERNAME DITEMUKAN
+				Main.userId = rs.getInt("id");
 				usernameCheck = true;
 				currPassword = rs.getString("password");
 			}

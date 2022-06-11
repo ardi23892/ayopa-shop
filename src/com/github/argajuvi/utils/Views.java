@@ -25,7 +25,7 @@ public class Views {
             int count = 0;
 
             System.out.print(line);
-            System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
+            System.out.printf(rowFormat, "ID.", "Product Name", "Product Price", "Product Type");
             System.out.print(line);
 
             List<Product> filteredProductList = Main.PRODUCT_LIST;
@@ -41,7 +41,7 @@ public class Views {
 
                 System.out.printf(
                         rowFormat,
-                        count + "", product.getName(),
+                        product.getID() + "", product.getName(),
                         Utils.formatPriceIDR(product.getPrice()),
                         product.getType().getName()
                 );
@@ -71,7 +71,7 @@ public class Views {
             System.out.print(line);
             System.out.printf(
                     rowFormat,
-                    "No.",
+                    "ID.",
                     "Product Name", "Product Price", "Product Type",
                     "Quantity", "Total Price"
             );
@@ -86,7 +86,7 @@ public class Views {
 
                 System.out.printf(
                         rowFormat,
-                        count + "",
+                        product.getID() + "",
                         product.getName(),
                         Utils.formatPriceIDR(product.getPrice()), product.getType().getName(),
                         order.getQuantity() + "",
