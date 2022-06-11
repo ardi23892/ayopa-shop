@@ -71,15 +71,5 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
-    public PreparedStatement prepareStatement(String query) {
-    	PreparedStatement ps = null;
-    	try {
-			ps = conn.prepareStatement(query);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-    	return ps;
-    }
 
 }

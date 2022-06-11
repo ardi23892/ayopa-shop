@@ -4,12 +4,14 @@ import com.github.argajuvi.Main;
 import com.github.argajuvi.database.Database;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
-import com.mysql.jdbc.ResultSet;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.jws.soap.SOAPBinding.Use;
 
 public class InitialMenu implements Menu {
 
@@ -70,18 +72,15 @@ public class InitialMenu implements Menu {
         //VALIDASI DATA LOGIN
         String query;
         
-        query = "SELECT * FROM users WHERE username = ?";
-        PreparedStatement ps = db.prepareStatement(query);
         boolean usernameCheck = false;
         String currPassword = "";
         
         try {
-        	ps.setString(1, username);
-			ResultSet result = (ResultSet) ps.executeQuery();
-			while(result.next()) {
+        	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", username);
+			while(rs.next()) {
 				//USERNAME DITEMUKAN
 				usernameCheck = true;
-				currPassword = result.getString("password");
+				currPassword = rs.getString("password");
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -140,14 +139,10 @@ public class InitialMenu implements Menu {
     public boolean insertUser(User newUser) {
     	String query;
         
-        query = "SELECT * FROM users WHERE username = ?";
-        PreparedStatement ps = db.prepareStatement(query);
-        
         boolean isUnique = true;
         try {
-        	ps.setString(1, newUser.getUsername());
-			ResultSet result = (ResultSet) ps.executeQuery();
-			while(result.next()) {
+        	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", newUser.getUsername());
+			while(rs.next()) {
 				isUnique = false;
 			}
 		} catch (SQLException e1) {
@@ -155,17 +150,7 @@ public class InitialMenu implements Menu {
 		}
         
         if(isUnique) {
-        	
-        	query = "INSERT INTO users VALUES(NULL, ?, ?)";
-            ps = db.prepareStatement(query);
-            
-            try {
-    			ps.setString(1, newUser.getUsername());
-    			ps.setString(2, newUser.getPassword());
-    			ps.executeUpdate();
-    		} catch (SQLException e) {
-    			e.printStackTrace();
-    		}
+        	db.execute("INSERT INTO users VALUES(NULL, ?, ?)", newUser.getUsername(), newUser.getPassword());    			
         }else {
         	System.out.println("User has already been registered before, maybe try login with it?");
             Utils.waitForEnter();

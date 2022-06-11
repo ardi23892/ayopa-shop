@@ -1,10 +1,13 @@
 package com.github.argajuvi.menus;
 
 import com.github.argajuvi.Main;
+import com.github.argajuvi.database.Database;
 import com.github.argajuvi.utils.Utils;
 
 public class UserMenu implements Menu {
 
+	Database db = Database.getInstance();
+	
     @Override
     public void showMenu() {
         while (true) {
