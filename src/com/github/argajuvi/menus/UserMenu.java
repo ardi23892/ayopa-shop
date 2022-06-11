@@ -1,5 +1,7 @@
 package com.github.argajuvi.menus;
 
+import java.text.ParseException;
+
 import com.github.argajuvi.Main;
 import com.github.argajuvi.database.Database;
 import com.github.argajuvi.utils.Utils;
@@ -9,7 +11,7 @@ public class UserMenu implements Menu {
 	Database db = Database.getInstance();
 	
     @Override
-    public void showMenu() {
+    public void showMenu() throws ParseException {
         while (true) {
             Utils.clearScreen();
 
@@ -40,7 +42,7 @@ public class UserMenu implements Menu {
         }
     }
 
-    private void showBuyProductsMenu() {
+    private void showBuyProductsMenu() throws ParseException {
         while (true) {
             Utils.clearScreen();
 

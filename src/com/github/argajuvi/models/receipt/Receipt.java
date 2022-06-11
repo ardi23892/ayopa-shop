@@ -3,6 +3,7 @@ package com.github.argajuvi.models.receipt;
 import com.github.argajuvi.models.order.Order;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class Receipt {
@@ -17,10 +18,10 @@ public class Receipt {
 
     private final int id;
     private final List<Order> orderList;
-    private final LocalDate purchaseDate;
+    private final Date purchaseDate;
     private final int totalPrice;
 
-    public Receipt(List<Order> orderList, LocalDate purchaseDate, int totalPrice) {
+    public Receipt(List<Order> orderList, Date purchaseDate, int totalPrice) {
         this.id = ID_TRACKER++;
         this.orderList = orderList;
         this.purchaseDate = purchaseDate;
@@ -31,7 +32,7 @@ public class Receipt {
         return id;
     }
 
-    public LocalDate getPurchaseDate() {
+    public Date getPurchaseDate() {
         return purchaseDate;
     }
 

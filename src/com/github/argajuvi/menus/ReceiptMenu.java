@@ -60,7 +60,7 @@ public class ReceiptMenu implements Menu {
             System.out.println();
             System.out.println("---------------------------------------");
             System.out.println("Receipt ID   : " + foundReceipt.getId());
-            System.out.println("Purchase Date: " + Utils.DATE_FORMATTER.format(foundReceipt.getPurchaseDate()));
+            System.out.println("Purchase Date: " + foundReceipt.getPurchaseDate());
             System.out.println("Total Price  : " + Utils.formatPriceIDR(foundReceipt.getTotalPrice()));
             System.out.println();
 
@@ -86,7 +86,7 @@ public class ReceiptMenu implements Menu {
                 } else if (product instanceof FoodProduct) {
                     FoodProduct food = (FoodProduct) product;
 
-                    System.out.println("   - Expire Date : " + Utils.DATE_FORMATTER.format(food.getExpireDate()));
+                    System.out.println("   - Expire Date : " + food.getExpireDate());
                 }
             }
 
@@ -113,7 +113,7 @@ public class ReceiptMenu implements Menu {
                 System.out.printf(
                         rowFormat,
                         receipt.getId() + "",
-                        Utils.DATE_FORMATTER.format(receipt.getPurchaseDate()),
+                        receipt.getPurchaseDate(),
                         Utils.formatPriceIDR(receipt.getTotalPrice())
                 );
             }

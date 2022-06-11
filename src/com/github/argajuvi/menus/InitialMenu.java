@@ -5,9 +5,9 @@ import com.github.argajuvi.database.Database;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +18,7 @@ public class InitialMenu implements Menu {
 	Database db = Database.getInstance();
 	
     @Override
-    public void showMenu() {
+    public void showMenu() throws ParseException {
         List<User> userList = Main.USER_LIST;
 
         while (true) {
@@ -57,7 +57,7 @@ public class InitialMenu implements Menu {
     }
 
     //	FUNCTION UNTUK LOGIN USER
-    public void loginUser(List<User> users) {
+    public void loginUser(List<User> users) throws ParseException {
         Scanner scanner = Utils.SCANNER;
 
         String username;

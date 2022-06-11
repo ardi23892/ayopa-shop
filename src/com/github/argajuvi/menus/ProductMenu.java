@@ -12,9 +12,12 @@ import sun.security.pkcs11.Secmod.DbMode;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductMenu {
 	
@@ -82,17 +85,40 @@ public class ProductMenu {
         //masukkan ke db
         //masukin ke receipt dengan status pending (0), purchase_date masih null
 //        System.out.println(Main.userId);
-        db.execute("INSERT INTO receipts VALUES(NULL, ?, NULL, ?, 0)", Main.userId, (quantity * chosenProduct.getPrice()));
-        
+        //cari dulu di table receipts yang user_id(sama) sama statusnya pending (0)
         int receiptId = 0;
+        boolean newReceipt = true;
         try {
 			ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
 			while(rs.next()) {
 				receiptId = rs.getInt("id");
+				newReceipt = false;
+				ResultSet rsOrder = db.getResults("SELECT * FROM orders, products WHERE receipt_id = ? AND orders.product_id = products.id", receiptId);
+				int totalPrice = 0;
+				while(rsOrder.next()) {
+					totalPrice += rsOrder.getInt("price");
+				}
+				db.execute("UPDATE receipts SET total_price = ? WHERE id = ?", totalPrice, receiptId);
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+        
+        if(newReceipt) {
+        	//ketika belum pernah masukin ke cart atau sudah checkout
+        	db.execute("INSERT INTO receipts VALUES(NULL, ?, NULL, ?, 0)", Main.userId, (quantity * chosenProduct.getPrice()));
+        	
+        	try {
+				ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+				while(rs.next()) {
+					receiptId = rs.getInt("id");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	
+        }
         
         db.execute("INSERT INTO orders VALUES(NULL, ?, ?, ?)", receiptId, chosenProduct.getID(), quantity);
 
@@ -134,7 +160,7 @@ public class ProductMenu {
         Utils.waitForEnter();
     }
 
-    public static void showCheckout() {
+    public static void showCheckout() throws ParseException {
         Utils.clearScreen();
 
         List<Order> cart = Main.CURRENT_USER.getCart();
@@ -157,7 +183,8 @@ public class ProductMenu {
             totalOfTotalPrice += order.getTotalPrice();
         }
 
-        Receipt receipt = new Receipt(orderList, LocalDate.now(), totalOfTotalPrice);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
+        Receipt receipt = new Receipt(orderList, formatter.parse(LocalDate.now().toString()), totalOfTotalPrice);
         Main.CURRENT_USER.getReceiptList().add(receipt);
         cart.clear();
 
