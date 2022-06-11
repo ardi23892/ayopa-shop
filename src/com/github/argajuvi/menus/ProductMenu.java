@@ -12,10 +12,16 @@ import sun.security.pkcs11.Secmod.DbMode;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -203,9 +209,28 @@ public class ProductMenu {
             totalOfTotalPrice += order.getTotalPrice();
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
-        Receipt receipt = new Receipt(orderList, formatter.parse(LocalDate.now().toString()), totalOfTotalPrice);
+        Date now = new Date();
+        
+        
+        
+        //ubah receipt yang pending jadi selesai (1)
+        Database db = Database.getInstance();
+        int receiptId = 0;
+        try {
+			ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+			while(rs.next()) {
+				receiptId = rs.getInt("id");
+				db.execute("UPDATE receipts SET status = 1, purchase_date = ? WHERE id = ?", now, receiptId);
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+        
+        Receipt receipt = new Receipt(receiptId, orderList, now, totalOfTotalPrice);
+      //nambah receipt ke data local
         Main.CURRENT_USER.getReceiptList().add(receipt);
+        
         cart.clear();
 
         System.out.println("Successfully purchase products!");

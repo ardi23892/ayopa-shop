@@ -23,9 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
 	
@@ -66,7 +63,7 @@ public class Main {
             throw new RuntimeException(e);
         }
         
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         
         db.execute(
                 "CREATE TABLE IF NOT EXISTS users (" +
@@ -203,6 +200,7 @@ public class Main {
 				ResultSet rsReceipt = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 1", userId);
 				while(rsReceipt.next()) {
 					int receiptId = rsReceipt.getInt("id");
+//					System.out.println(receiptId);
 					ResultSet rsOrder = db.getResults("SELECT * FROM orders WHERE receipt_id = ? ", receiptId);
 					List<Order>newOrder = new ArrayList<>();
 					while(rsOrder.next()) {
@@ -213,8 +211,8 @@ public class Main {
 					}
 					Date purchaseDate = rsReceipt.getDate("purchase_date");
 					int totalPrice = rsReceipt.getInt("total_price");
-					USER_LIST.get(userIdx).getReceiptList().add(new Receipt(newOrder, purchaseDate, totalPrice));
-					System.out.println("TestCheckOut");
+					USER_LIST.get(userIdx).getReceiptList().add(new Receipt(receiptId, newOrder, purchaseDate, totalPrice));
+//					System.out.println("TestCheckOut");
 				}
 				
 				//cek product dan receiptnya, yang reciptnya belum di checkout (cart)

@@ -14,15 +14,15 @@ public class Receipt {
      * We need a tracker that starts from {@code 1} and automatically increment
      * as more receipts are created.
      */
-    private static int ID_TRACKER = 1;
+//    private static int ID_TRACKER = 1;
 
     private final int id;
     private final List<Order> orderList;
     private final Date purchaseDate;
     private final int totalPrice;
 
-    public Receipt(List<Order> orderList, Date purchaseDate, int totalPrice) {
-        this.id = ID_TRACKER++;
+    public Receipt(int id, List<Order> orderList, Date purchaseDate, int totalPrice) {
+        this.id = id;
         this.orderList = orderList;
         this.purchaseDate = purchaseDate;
         this.totalPrice = totalPrice;
