@@ -49,7 +49,6 @@ public class AdminMenu implements Menu {
     }
 
     private void addProduct(int choice) {
-        ProductFactory productFactory = new ProductFactory();
         String productName = null;
         boolean isProductNameOk = false;
 
@@ -74,11 +73,8 @@ public class AdminMenu implements Menu {
         }
 
         Product product;
-        ProductType productType;
 
         if (choice == 1) {
-            productType = ProductType.CLOTHING;
-
             char size = 0;
             boolean isProductSizeOk = false;
 
@@ -91,10 +87,8 @@ public class AdminMenu implements Menu {
                 } else isProductSizeOk = true;
             }
 
-            product = productFactory.getProduct(productType, productName, productPrice, size);
+            product = ProductFactory.createClothProduct(productName, productPrice, size);
         } else if (choice == 2) {
-            productType = ProductType.FOOD;
-
             String strExpDate;
             LocalDate expDate = null;
             boolean isEXPDateOk = false;
@@ -119,10 +113,8 @@ public class AdminMenu implements Menu {
                 }
             }
 
-            product = productFactory.getProduct(productType, productName, productPrice, expDate);
+            product = ProductFactory.createFoodProduct(productName, productPrice, expDate);
         } else {
-            productType = ProductType.BOOK;
-
             int publicationYear = 0;
             String author = null;
             boolean isBookYearOk = false;
@@ -146,7 +138,7 @@ public class AdminMenu implements Menu {
                 } else isAuthorOk = true;
             }
 
-            product = productFactory.getProduct(productType, productName, productPrice, publicationYear, author);
+            product = ProductFactory.createBookProduct(productName, productPrice, publicationYear, author);
         }
 
         Main.PRODUCT_LIST.add(product);
