@@ -338,6 +338,10 @@ public class AdminMenu implements Menu {
             else System.out.println("Your Input is Invalid");
         }
 
+        //remove from db
+        int idProduct = Main.PRODUCT_LIST.get(del - 1).getID();
+        db.execute("DELETE FROM products WHERE id = ?", idProduct);
+        
         System.out.println(Main.PRODUCT_LIST.get(del - 1).getName() + " has been deleted");
         Main.PRODUCT_LIST.remove(del - 1);
 
