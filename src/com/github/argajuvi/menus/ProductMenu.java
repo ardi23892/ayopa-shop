@@ -8,27 +8,17 @@ import com.github.argajuvi.models.receipt.Receipt;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
 
-import sun.security.pkcs11.Secmod.DbMode;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ProductMenu {
-	
+
     public static void showOrderProductMenu() {
-    	Database db = Database.getInstance();
+        Database db = Database.getInstance();
         Utils.clearScreen();
         Views.showProductsView();
 
@@ -44,28 +34,28 @@ public class ProductMenu {
             if (choice == 0) {
                 return;
             }
-            
+
             //cek product ada atau tidak
             boolean checkProduct = false;
             try {
-				ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", choice);
-				while(rs.next()) {
-					checkProduct = true;
-					
-					//get product index
-					for(int i = 0; i < Main.PRODUCT_LIST.size(); i++) {
-						if(Main.PRODUCT_LIST.get(i).getID() == choice) {
-							productIdx = i;
-							break;
-						}
-					}
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-            
-            if(!checkProduct){
-            	System.out.println("Cannot find product");
+                ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", choice);
+                while (rs.next()) {
+                    checkProduct = true;
+
+                    //get product index
+                    for (int i = 0; i < Main.PRODUCT_LIST.size(); i++) {
+                        if (Main.PRODUCT_LIST.get(i).getId() == choice) {
+                            productIdx = i;
+                            break;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if (!checkProduct) {
+                System.out.println("Cannot find product");
                 continue;
             }
 
@@ -85,8 +75,7 @@ public class ProductMenu {
             break;
         }
 
-        
-        
+
         //masukkan ke db
         //masukin ke receipt dengan status pending (0), purchase_date masih null
 //        System.out.println(Main.userId);
@@ -94,52 +83,52 @@ public class ProductMenu {
         int receiptId = 0;
         boolean newReceipt = true;
         try {
-			ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
-			while(rs.next()) {
-				receiptId = rs.getInt("id");
-				newReceipt = false;
-				ResultSet rsOrder = db.getResults("SELECT * FROM orders, products WHERE receipt_id = ? AND orders.product_id = products.id", receiptId);
-				int totalPrice = 0;
-				while(rsOrder.next()) {
-					totalPrice += rsOrder.getInt("price");
-				}
-				db.execute("UPDATE receipts SET total_price = ? WHERE id = ?", totalPrice, receiptId);
-				
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        
-        if(newReceipt) {
-        	//ketika belum pernah masukin ke cart atau sudah checkout
-        	db.execute("INSERT INTO receipts VALUES(NULL, ?, NULL, ?, 0)", Main.userId, (quantity * chosenProduct.getPrice()));
-        	
-        	try {
-				ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
-				while(rs.next()) {
-					receiptId = rs.getInt("id");
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-        	
+            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+            while (rs.next()) {
+                receiptId = rs.getInt("id");
+                newReceipt = false;
+                ResultSet rsOrder = db.getResults("SELECT * FROM orders, products WHERE receipt_id = ? AND orders.product_id = products.id", receiptId);
+                int totalPrice = 0;
+                while (rsOrder.next()) {
+                    totalPrice += rsOrder.getInt("price");
+                }
+                db.execute("UPDATE receipts SET total_price = ? WHERE id = ?", totalPrice, receiptId);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
-        db.execute("INSERT INTO orders VALUES(NULL, ?, ?, ?)", receiptId, chosenProduct.getID(), quantity);
-        
+
+        if (newReceipt) {
+            //ketika belum pernah masukin ke cart atau sudah checkout
+            db.execute("INSERT INTO receipts VALUES(NULL, ?, NULL, ?, 0)", Main.userId, (quantity * chosenProduct.getPrice()));
+
+            try {
+                ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+                while (rs.next()) {
+                    receiptId = rs.getInt("id");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        db.execute("INSERT INTO orders VALUES(NULL, ?, ?, ?)", receiptId, chosenProduct.getId(), quantity);
+
         ResultSet rs;
         int idOrder = 0;
-		try {
-			rs = db.getResults("SELECT * FROM orders WHERE receiptId = ?", receiptId);
-			int countOrder = Main.CURRENT_USER.getCart().size();
-	        int count = 0;
-	        while(rs.next()) {
-	        	count++;
-	        	if(countOrder == count) idOrder = rs.getInt("id");
-	        }
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}        
+        try {
+            rs = db.getResults("SELECT * FROM orders WHERE receiptId = ?", receiptId);
+            int countOrder = Main.CURRENT_USER.getCart().size();
+            int count = 0;
+            while (rs.next()) {
+                count++;
+                if (countOrder == count) idOrder = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Order order = new Order(idOrder, chosenProduct, quantity);
         Main.CURRENT_USER.getCart().add(order);
 
@@ -176,10 +165,10 @@ public class ProductMenu {
         }
 
         //hapus dari db ketika name dan quantity sama
-        int idOrder = cart.get(choice - 1).getId(); 
+        int idOrder = cart.get(choice - 1).getId();
         Database db = Database.getInstance();
         db.execute("DELETE FROM orders WHERE id = ?", idOrder);
-        
+
         cart.remove(choice - 1);
         System.out.println("Successfully removed order from the cart");
 
@@ -210,27 +199,26 @@ public class ProductMenu {
         }
 
         Date now = new Date();
-        
-        
-        
+
+
         //ubah receipt yang pending jadi selesai (1)
         Database db = Database.getInstance();
         int receiptId = 0;
         try {
-			ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
-			while(rs.next()) {
-				receiptId = rs.getInt("id");
-				db.execute("UPDATE receipts SET status = 1, purchase_date = ? WHERE id = ?", now, receiptId);
-				
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-        
+            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+            while (rs.next()) {
+                receiptId = rs.getInt("id");
+                db.execute("UPDATE receipts SET status = 1, purchase_date = ? WHERE id = ?", now, receiptId);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         Receipt receipt = new Receipt(receiptId, orderList, now, totalOfTotalPrice);
-      //nambah receipt ke data local
+        //nambah receipt ke data local
         Main.CURRENT_USER.getReceiptList().add(receipt);
-        
+
         cart.clear();
 
         System.out.println("Successfully purchase products!");

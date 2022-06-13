@@ -15,4 +15,5 @@ public enum ProductType {
     public String getName() {
         return name;
     }
+
 }

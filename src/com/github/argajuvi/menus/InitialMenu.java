@@ -11,8 +11,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.jws.soap.SOAPBinding.Use;
-
 public class InitialMenu implements Menu {
 
 	Database db = Database.getInstance();

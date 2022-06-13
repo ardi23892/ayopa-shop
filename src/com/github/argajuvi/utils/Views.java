@@ -23,7 +23,6 @@ public class Views {
         } else {
             String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
             String line = "----------------------------------------------------------------------------------------\n";
-            int count = 0;
 
             System.out.print(line);
             System.out.printf(rowFormat, "ID.", "Product Name", "Product Price", "Product Type");
@@ -38,11 +37,9 @@ public class Views {
             }
 
             for (Product product : filteredProductList) {
-                count++;
-
                 System.out.printf(
                         rowFormat,
-                        product.getID() + "", product.getName(),
+                        product.getId() + "", product.getName(),
                         Utils.formatPriceIDR(product.getPrice()),
                         product.getType().getName()
                 );

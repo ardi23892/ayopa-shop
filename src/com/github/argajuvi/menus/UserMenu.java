@@ -1,14 +1,11 @@
 package com.github.argajuvi.menus;
 
-import java.text.ParseException;
-
 import com.github.argajuvi.Main;
-import com.github.argajuvi.database.Database;
 import com.github.argajuvi.utils.Utils;
 
-public class UserMenu implements Menu {
+import java.text.ParseException;
 
-	Database db = Database.getInstance();
+public class UserMenu implements Menu {
 	
     @Override
     public void showMenu() throws ParseException {
