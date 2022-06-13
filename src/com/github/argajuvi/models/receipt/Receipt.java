@@ -2,7 +2,7 @@ package com.github.argajuvi.models.receipt;
 
 import com.github.argajuvi.models.order.Order;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Receipt {

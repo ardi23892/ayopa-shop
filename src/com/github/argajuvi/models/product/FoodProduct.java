@@ -1,6 +1,6 @@
 package com.github.argajuvi.models.product;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class FoodProduct extends Product {
 

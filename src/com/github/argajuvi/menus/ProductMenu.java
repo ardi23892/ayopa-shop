@@ -10,10 +10,11 @@ import com.github.argajuvi.utils.Closer;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ProductMenu {
@@ -208,8 +209,7 @@ public class ProductMenu {
             totalOfTotalPrice += order.getTotalPrice();
         }
 
-        Date now = new Date();
-
+        Date now = Date.valueOf(LocalDate.now());
 
         //ubah receipt yang pending jadi selesai (1)
         Database db = Database.getInstance();
