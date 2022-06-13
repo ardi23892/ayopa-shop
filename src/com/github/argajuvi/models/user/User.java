@@ -8,8 +8,7 @@ import java.util.List;
 
 public class User {
 
-    private final int id;
-
+    private int id;
     private final String username, password;
     private final List<Receipt> receiptList;
 
@@ -33,6 +32,10 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {
