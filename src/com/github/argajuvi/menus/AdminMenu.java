@@ -1,11 +1,7 @@
 package com.github.argajuvi.menus;
 
 import com.github.argajuvi.Main;
-import com.github.argajuvi.database.Database;
-import com.github.argajuvi.models.product.BookProduct;
-import com.github.argajuvi.models.product.ClothingProduct;
-import com.github.argajuvi.models.product.FoodProduct;
-import com.github.argajuvi.models.product.Product;
+import com.github.argajuvi.models.product.*;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
@@ -82,6 +78,7 @@ public class AdminMenu implements Menu {
         }
 
         Product product;
+
         if (choice == 1) {
             char size = 0;
             boolean isProductSizeOk = false;
@@ -119,9 +116,7 @@ public class AdminMenu implements Menu {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-            
-            
-            product = new ClothingProduct(idProduct, productName, productPrice, size);
+            product = ProductFactory.createClothProduct(productName, productPrice, size);
         } else if (choice == 2) {
             String strExpDate;
             LocalDate expDate = null;
@@ -161,8 +156,7 @@ public class AdminMenu implements Menu {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-            product = new FoodProduct(idProduct, productName, productPrice, Date.valueOf(expDate));
+            product = ProductFactory.createFoodProduct(productName, productPrice, expDate);
         } else {
             int publicationYear = 0;
             String author = null;
@@ -200,8 +194,7 @@ public class AdminMenu implements Menu {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-            
-            product = new BookProduct(idProduct, productName, productPrice, publicationYear, author);
+            product = ProductFactory.createBookProduct(productName, productPrice, publicationYear, author);
         }
 
         Main.PRODUCT_LIST.add(product);
@@ -241,7 +234,7 @@ public class AdminMenu implements Menu {
                     System.out.println("All Products\n");
                     Views.showProductsView();
                 } else {
-                    Product.Type filter = Product.Type.values()[choose - 2];
+                    ProductType filter = ProductType.values()[choose - 2];
                     System.out.println(filter.getName() + " Products\n");
                     Views.showProductsView(filter);
                 }

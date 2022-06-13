@@ -3,6 +3,7 @@ package com.github.argajuvi.utils;
 import com.github.argajuvi.Main;
 import com.github.argajuvi.models.order.Order;
 import com.github.argajuvi.models.product.Product;
+import com.github.argajuvi.models.product.ProductType;
 import com.sun.istack.internal.Nullable;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class Views {
      * @param filterType the type of product should be shown on the view,
      *                   insert {@code null} to not use any filters
      */
-    public static void showProductsView(@Nullable Product.Type filterType) {
+    public static void showProductsView(@Nullable ProductType filterType) {
         if (Main.PRODUCT_LIST.isEmpty()) {
             System.out.println("No products found.");
         } else {
@@ -52,7 +53,7 @@ public class Views {
     }
 
     /**
-     * @see Views#showProductsView(Product.Type)
+     * @see Views#showProductsView(ProductType)
      */
     public static void showProductsView() {
         showProductsView(null);
