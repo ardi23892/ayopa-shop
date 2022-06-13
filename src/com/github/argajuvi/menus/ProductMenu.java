@@ -5,12 +5,13 @@ import com.github.argajuvi.database.Database;
 import com.github.argajuvi.models.order.Order;
 import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.models.receipt.Receipt;
+import com.github.argajuvi.models.user.User;
+import com.github.argajuvi.utils.Closer;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,6 +76,8 @@ public class ProductMenu {
             break;
         }
 
+        User user = Main.CURRENT_USER;
+
 
         //masukkan ke db
         //masukin ke receipt dengan status pending (0), purchase_date masih null
@@ -82,12 +85,15 @@ public class ProductMenu {
         //cari dulu di table receipts yang user_id(sama) sama statusnya pending (0)
         int receiptId = 0;
         boolean newReceipt = true;
-        try {
-            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+        try (Closer closer = new Closer()) {
+            ResultSet rs = closer.add(db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", user.getId()));
+
             while (rs.next()) {
                 receiptId = rs.getInt("id");
+
                 newReceipt = false;
-                ResultSet rsOrder = db.getResults("SELECT * FROM orders, products WHERE receipt_id = ? AND orders.product_id = products.id", receiptId);
+                ResultSet rsOrder = closer.add(db.getResults("SELECT * FROM orders, products WHERE receipt_id = ? AND orders.product_id = products.id", receiptId));
+
                 int totalPrice = 0;
                 while (rsOrder.next()) {
                     totalPrice += rsOrder.getInt("price");
@@ -100,11 +106,11 @@ public class ProductMenu {
         }
 
         if (newReceipt) {
-            //ketika belum pernah masukin ke cart atau sudah checkout
-            db.execute("INSERT INTO receipts VALUES(NULL, ?, NULL, ?, 0)", Main.userId, (quantity * chosenProduct.getPrice()));
+            // ketika belum pernah masukin ke cart atau sudah checkout
+            db.execute("INSERT INTO receipts (user_id, total_price, status) VALUES (?, ?, false)", user.getId(), (quantity * chosenProduct.getPrice()));
 
             try {
-                ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+                ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", user.getId());
                 while (rs.next()) {
                     receiptId = rs.getInt("id");
                 }
@@ -114,14 +120,16 @@ public class ProductMenu {
 
         }
 
-        db.execute("INSERT INTO orders VALUES(NULL, ?, ?, ?)", receiptId, chosenProduct.getId(), quantity);
+        db.execute("INSERT INTO orders VALUES (NULL, ?, ?, ?)", receiptId, chosenProduct.getId(), quantity);
 
         ResultSet rs;
         int idOrder = 0;
         try {
-            rs = db.getResults("SELECT * FROM orders WHERE receiptId = ?", receiptId);
-            int countOrder = Main.CURRENT_USER.getCart().size();
+            rs = db.getResults("SELECT * FROM orders WHERE receipt_id = ?", receiptId);
+
+            int countOrder = user.getCart().size();
             int count = 0;
+
             while (rs.next()) {
                 count++;
                 if (countOrder == count) idOrder = rs.getInt("id");
@@ -130,7 +138,7 @@ public class ProductMenu {
             e.printStackTrace();
         }
         Order order = new Order(idOrder, chosenProduct, quantity);
-        Main.CURRENT_USER.getCart().add(order);
+        user.getCart().add(order);
 
         System.out.println("Product is added to the cart!");
         Utils.waitForEnter();
@@ -175,10 +183,12 @@ public class ProductMenu {
         Utils.waitForEnter();
     }
 
-    public static void showCheckout() throws ParseException {
+    public static void showCheckout() {
         Utils.clearScreen();
 
-        List<Order> cart = Main.CURRENT_USER.getCart();
+        User user = Main.CURRENT_USER;
+        List<Order> cart = user.getCart();
+
         Views.showCartView();
 
         if (cart.isEmpty()) {
@@ -205,7 +215,7 @@ public class ProductMenu {
         Database db = Database.getInstance();
         int receiptId = 0;
         try {
-            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", Main.userId);
+            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", user.getId());
             while (rs.next()) {
                 receiptId = rs.getInt("id");
                 db.execute("UPDATE receipts SET status = 1, purchase_date = ? WHERE id = ?", now, receiptId);
