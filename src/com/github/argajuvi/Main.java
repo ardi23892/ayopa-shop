@@ -99,7 +99,7 @@ public class Main {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String insertProductQuery = "INSERT INTO products VALUES (" +
                                     // id, name, price, type
-                                    "  ?, ?, ?, ?, " +
+                                    "  NULL, ?, ?, ?, " +
                                     // size
                                     "  ?, " +
                                     // publish_year, author
@@ -108,29 +108,34 @@ public class Main {
                                     "  ?)";
 
         db.execute(insertProductQuery,
-                null, "Java OOP Done Right", 473_000, ProductType.BOOK.ordinal(),
+                "Java OOP Done Right", 473_000, ProductType.BOOK.ordinal(),
                 null,
                 2021, "Alan Mellor",
                 null);
 
         db.execute(insertProductQuery,
-                null, "Tate no Yusha no Nariagari Vol. 1", 317_000, ProductType.BOOK.ordinal(),
+                "Tate no Yusha no Nariagari Vol. 1", 317_000, ProductType.BOOK.ordinal(),
                 null,
                 2013, "Aneko Yusagi",
                 null);
 
         db.execute(insertProductQuery,
-                null, "Shingeki no Kyojin Zip Hoodie", 387_000, ProductType.CLOTHING.ordinal(),
+                "Shingeki no Kyojin Zip Hoodie", 387_000, ProductType.CLOTHING.ordinal(),
                 "L",
                 null, null,
                 null);
 
         Date expireDate = formatter.parse(LocalDate.now().plus(1, ChronoUnit.MONTHS).toString());
         db.execute(insertProductQuery,
-                null, "Lays 1 Ounce (Pack of 104)", 831_476, ProductType.FOOD.ordinal(),
+                "Lays 1 Ounce (Pack of 104)", 831_476, ProductType.FOOD.ordinal(),
                 null,
                 null, null,
                 expireDate);
+
+        String insertUserQuery = "INSERT INTO users VALUES (NULL, ?, ?)";
+        db.execute(insertUserQuery, "admin", "admin123");
+        db.execute(insertUserQuery, "example", "example123");
+        db.execute(insertUserQuery, "johndoe", "doerMu123");
 
         // mark as done
         db.execute("INSERT INTO seeder VALUES (NOW())");
