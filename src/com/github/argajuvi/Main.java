@@ -61,7 +61,7 @@ public class Main {
                 "CREATE TABLE IF NOT EXISTS receipts (" +
                 "  id INT AUTO_INCREMENT, " +
                 "  user_id INT NOT NULL, " +
-                "  purchase_date DATE NULL, " +
+                "  purchase_date DATE, " +
                 "  total_price INT NOT NULL, " +
                 "  status INT NOT NULL, " +
                 "  PRIMARY KEY (id), " +
@@ -92,57 +92,60 @@ public class Main {
             e.printStackTrace();
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        if (!isSeeded) {
-            db.execute("INSERT INTO seeder VALUES (true)");
-
-            String insertProductQuery = "INSERT INTO products VALUES (" +
-                                        // id, name, price, type
-                                        "  ?, ?, ?, ?, " +
-                                        // size
-                                        "  ?," +
-                                        // publish_year, author
-                                        "  ?, ?, ?" +
-                                        // expire_date
-                                        "  ?)";
-
-            db.execute(insertProductQuery,
-                    null, "Java OOP Done Right", 473_000, ProductType.BOOK.ordinal(),
-                    null,
-                    2021, "Alan Mellor",
-                    null);
-
-            db.execute(insertProductQuery,
-                    null, "Tate no Yusha no Nariagari Vol. 1", 317_000, ProductType.BOOK.ordinal(),
-                    null,
-                    2013, "Aneko Yusagi",
-                    null);
-
-            db.execute(insertProductQuery,
-                    null, "Shingeki no Kyojin Zip Hoodie", 387_000, ProductType.CLOTHING.ordinal(),
-                    'L',
-                    null, null,
-                    null);
-
-            Date expireDate = formatter.parse(LocalDate.now().plus(1, ChronoUnit.MONTHS).toString());
-            db.execute(insertProductQuery,
-                    null, "Lays 1 Ounce (Pack of 104)", 831_476, ProductType.FOOD.ordinal(),
-                    null,
-                    null, null,
-                    expireDate);
+        if (isSeeded) {
+            return;
         }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        String insertProductQuery = "INSERT INTO products VALUES (" +
+                                    // id, name, price, type
+                                    "  ?, ?, ?, ?, " +
+                                    // size
+                                    "  ?, " +
+                                    // publish_year, author
+                                    "  ?, ?, " +
+                                    // expire_date
+                                    "  ?)";
+
+        db.execute(insertProductQuery,
+                null, "Java OOP Done Right", 473_000, ProductType.BOOK.ordinal(),
+                null,
+                2021, "Alan Mellor",
+                null);
+
+        db.execute(insertProductQuery,
+                null, "Tate no Yusha no Nariagari Vol. 1", 317_000, ProductType.BOOK.ordinal(),
+                null,
+                2013, "Aneko Yusagi",
+                null);
+
+        db.execute(insertProductQuery,
+                null, "Shingeki no Kyojin Zip Hoodie", 387_000, ProductType.CLOTHING.ordinal(),
+                "L",
+                null, null,
+                null);
+
+        Date expireDate = formatter.parse(LocalDate.now().plus(1, ChronoUnit.MONTHS).toString());
+        db.execute(insertProductQuery,
+                null, "Lays 1 Ounce (Pack of 104)", 831_476, ProductType.FOOD.ordinal(),
+                null,
+                null, null,
+                expireDate);
+
+        // mark as done
+        db.execute("INSERT INTO seeder VALUES (NOW())");
     }
 
     public Main() throws ParseException {
         Database db = Database.getInstance();
         try {
             db.connect();
-        } catch (SQLException e) {
+
+            this.createTables(db);
+            this.seedData(db);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        this.createTables(db);
-        this.seedData(db);
 
         Map<Integer, Integer> productMap = new HashMap<>();
 
