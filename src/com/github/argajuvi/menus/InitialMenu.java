@@ -1,28 +1,36 @@
 package com.github.argajuvi.menus;
 
 import com.github.argajuvi.Main;
+import com.github.argajuvi.database.Database;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.jws.soap.SOAPBinding.Use;
+
 public class InitialMenu implements Menu {
 
+	Database db = Database.getInstance();
+	List<User> userList = Main.USER_LIST;
+	
     @Override
-    public void showMenu() {
-        List<User> userList = Main.USER_LIST;
+    public void showMenu() throws ParseException {
 
         while (true) {
             Utils.clearScreen();
 
             System.out.println(
-                    " █████╗ ██╗   ██╗ ██████╗ ██████╗  █████╗     ███████╗██╗  ██╗ ██████╗ ██████╗ \n" +
-                    "██╔══██╗╚██╗ ██╔╝██╔═══██╗██╔══██╗██╔══██╗    ██╔════╝██║  ██║██╔═══██╗██╔══██╗\n" +
-                    "███████║ ╚████╔╝ ██║   ██║██████╔╝███████║    ███████╗███████║██║   ██║██████╔╝\n" +
-                    "██╔══██║  ╚██╔╝  ██║   ██║██╔═══╝ ██╔══██║    ╚════██║██╔══██║██║   ██║██╔═══╝ \n" +
-                    "██║  ██║   ██║   ╚██████╔╝██║     ██║  ██║    ███████║██║  ██║╚██████╔╝██║     \n" +
-                    "╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     \n");
+                    " â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—  â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—     â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ•—  â–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— \n" +
+                    "â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•—â•šâ–ˆâ–ˆâ•— â–ˆâ–ˆâ•”â•�â–ˆâ–ˆâ•”â•�â•�â•�â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•—    â–ˆâ–ˆâ•”â•�â•�â•�â•�â•�â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•�â•�â•�â–ˆâ–ˆâ•—â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•—\n" +
+                    "â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘ â•šâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•� â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•�â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘    â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•—â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•�\n" +
+                    "â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•‘  â•šâ–ˆâ–ˆâ•”â•�  â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•�â•�â•�â•� â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•‘    â•šâ•�â•�â•�â•�â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•�â•�â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•�â•�â•�â•� \n" +
+                    "â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘   â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•�â–ˆâ–ˆâ•‘     â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•�â–ˆâ–ˆâ•‘     \n" +
+                    "â•šâ•�â•�  â•šâ•�â•�   â•šâ•�â•�    â•šâ•�â•�â•�â•�â•�â•� â•šâ•�â•�     â•šâ•�â•�  â•šâ•�â•�    â•šâ•�â•�â•�â•�â•�â•�â•�â•šâ•�â•�  â•šâ•�â•� â•šâ•�â•�â•�â•�â•�â•� â•šâ•�â•�     \n");
 
             System.out.println(
                     "1. Login\n" +
@@ -49,7 +57,7 @@ public class InitialMenu implements Menu {
     }
 
     //	FUNCTION UNTUK LOGIN USER
-    public void loginUser(List<User> users) {
+    public void loginUser(List<User> users) throws ParseException {
         Scanner scanner = Utils.SCANNER;
 
         String username;
@@ -60,41 +68,46 @@ public class InitialMenu implements Menu {
         username = scanner.nextLine();
         System.out.print("Input Password: ");
         password = scanner.nextLine();
-
-        // VALIDASI DATA LOGIN
+        
+        //VALIDASI DATA LOGIN
+        String query;
+        
+        boolean usernameCheck = false;
+        String currPassword = "";
+        
+        int userIdx = 0;
         try {
-            // LOOPING UNTUK MENCARI USERNAME DALAM VECTOR
-            for (int i = 0; i <= users.size(); i++) {
-                User user = users.get(i);
-
-                if (username.equals(user.getUsername())) {
-                    if (password.equals(user.getPassword())) {
-                        Main.CURRENT_USER = user;
-
-                        // VALIDASI APAKAH LOGIN UNTUK ADMIN ATAU USER
-                        if (username.equals("admin")) {
-                            // SHOW MENU ADMIN KALAU YANG LOGIN ADMIN
-                            menu = new AdminMenu();
-                            menu.showMenu();
-                            break;
-                        } else {
-                            // SHOW MENU ADMIN KALAU YANG LOGIN USER BIASA
-                            menu = new UserMenu();
-                            menu.showMenu();
-                            break;
-                        }
-                    } else {
-                        System.out.println("Incorrect password! Make sure to enter the correct password next time!");
-                        Utils.waitForEnter();
-                        break;
-                    }
-                }
-            }
-            // VALIDASI JIKA TIDAK DITEMUKAN DATA LOGIN PADA ARRAYLIST (DENGAN ARRAY OUT OF RANGE)
-        } catch (Exception e) {
-            System.out.println("Username doesn't exists! Make sure the account is registered!");
-            Utils.waitForEnter();
+        	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", username);
+			while(rs.next()) {
+				//USERNAME DITEMUKAN
+				Main.userId = rs.getInt("id");
+				usernameCheck = true;
+				for(int i = 0; i < userList.size(); i++) {
+					if(username.equals(userList.get(i).getUsername())) userIdx = i;
+				}
+				currPassword = rs.getString("password");
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+        
+        if(!usernameCheck){
+        	System.out.println("Username doesn't exists! Make sure the account is registered!");
+        	Utils.waitForEnter();
         }
+        
+        
+        if(currPassword.equals(password)) {
+        	if(username.equals("admin")) {
+				menu = new AdminMenu();
+			}else {
+				menu = new UserMenu();
+			}
+        	
+        	Main.CURRENT_USER = userList.get(userIdx);
+        	menu.showMenu();
+        }
+   
     }
 
     //	FUNCTION REGISTER DATA USER BARU
@@ -114,23 +127,39 @@ public class InitialMenu implements Menu {
                 password = scanner.nextLine();
             } while (username.length() < 5 || password.length() < 5);
 
-            try {
-                for (int i = 0; i <= users.size(); i++) {
-                    if (username.equals(users.get(i).getUsername())) {
-                        System.out.println("User has already been registered before, maybe try login with it?");
-                        Utils.waitForEnter();
-                        break;
-                    }
-                }
-            } catch (Exception e) {
-                registering = false;
-            }
+            User newUser = new User(username, password);
+            registering = insertUser(newUser);
+            
         } while (registering);
 
         System.out.println("User is successfully registered!");
         Utils.waitForEnter();
-
+        
         return new User(username, password);
+    }
+    
+    //Insert Query with Unique user
+    public boolean insertUser(User newUser) {
+    	String query;
+        
+        boolean isUnique = true;
+        try {
+        	ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", newUser.getUsername());
+			while(rs.next()) {
+				isUnique = false;
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+        
+        if(isUnique) {
+        	db.execute("INSERT INTO users VALUES(NULL, ?, ?)", newUser.getUsername(), newUser.getPassword());    			
+        }else {
+        	System.out.println("User has already been registered before, maybe try login with it?");
+            Utils.waitForEnter();
+            return true;
+        }
+        return false;
     }
 
 }

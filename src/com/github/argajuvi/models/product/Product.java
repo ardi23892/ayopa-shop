@@ -2,14 +2,17 @@ package com.github.argajuvi.models.product;
 
 public abstract class Product {
 
+	private final int ID;
     private final String name;
     private int price;
     private final ProductType type;
 
-    public Product(String name, int price) {
+    public Product(int ID, String name, int price) {
         this.name = name;
         this.price = price;
-
+        this.ID = ID;
+        
+        
         if (this instanceof FoodProduct) {
             this.type = ProductType.FOOD;
         } else if (this instanceof BookProduct) {
@@ -36,5 +39,9 @@ public abstract class Product {
     public ProductType getType() {
         return type;
     }
+
+    public int getID() {
+		return ID;
+	}
 
 }

@@ -6,11 +6,16 @@ import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Utils;
 import com.github.argajuvi.utils.Views;
 
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class AdminMenu implements Menu {
 
+	Database db = Database.getInstance();
+	
     @Override
     public void showMenu() {
         while (true) {
@@ -80,13 +85,37 @@ public class AdminMenu implements Menu {
 
             while (!isProductSizeOk) {
                 System.out.print("Input product size [ S/M/L ]: ");
-                size = Utils.SCANNER.nextLine().charAt(0);
+                size = Utils.SCANNER.next().charAt(0);
+                Utils.SCANNER.nextLine();
 
                 if (size != 'S' && size != 'M' && size != 'L') {
                     System.out.println("Only 'S' or 'M' or 'L'!");
                 } else isProductSizeOk = true;
             }
-
+            
+            System.out.println(productName + " | " + productPrice + " | " + size);
+            
+            
+            
+            //insert into db (error saat input character)
+            if(size == 'S') db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'S', NULL, NULL, NULL)", productName, productPrice);
+            else if(size == 'M') db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'M', NULL, NULL, NULL)", productName, productPrice);
+            else db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'L', NULL, NULL, NULL)", productName, productPrice);
+            
+            System.out.println("Succes Insert");
+            
+            int idProduct = 0;
+            ResultSet rs;
+			try {
+				rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 1", productName, productPrice);
+				while(rs.next()) {
+	            	idProduct = rs.getInt("id");
+//	            	System.out.println("RS next");
+	            }
+//				System.out.println("Test rs");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
             product = ProductFactory.createClothProduct(productName, productPrice, size);
         } else if (choice == 2) {
             String strExpDate;
@@ -112,7 +141,21 @@ public class AdminMenu implements Menu {
                     System.out.println("Wrong date format!");
                 }
             }
-
+            
+          //insert into db
+            db.execute("INSERT INTO products VALUES(NULL, ?, ?, 3, NULL, NULL, NULL, ?)", productName, productPrice, Date.valueOf(expDate));
+            
+            int idProduct = 0;
+            ResultSet rs;
+			try {
+				rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 3", productName, productPrice);
+				while(rs.next()) {
+	            	idProduct = rs.getInt("id");
+	            }
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             product = ProductFactory.createFoodProduct(productName, productPrice, expDate);
         } else {
             int publicationYear = 0;
@@ -138,6 +181,19 @@ public class AdminMenu implements Menu {
                 } else isAuthorOk = true;
             }
 
+          //insert into db
+            db.execute("INSERT INTO products VALUES(NULL, ?, ?, 2, NULL, ?, ?, NULL)", productName, productPrice, publicationYear, author);
+            
+            int idProduct = 0;
+            ResultSet rs;
+			try {
+				rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 2 AND publish_year = ? AND author = ?", productName, productPrice, publicationYear, author);
+				while(rs.next()) {
+	            	idProduct = rs.getInt("id");
+	            }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
             product = ProductFactory.createBookProduct(productName, productPrice, publicationYear, author);
         }
 
@@ -191,15 +247,15 @@ public class AdminMenu implements Menu {
     private void updateProduct() {
         String rowFormat = "| %3s | %-40s | %-20s | %-12s |\n";
         String line = "----------------------------------------------------------------------------------------\n";
-        int count = 0;
         System.out.println("Update Product\n");
         System.out.print(line);
         System.out.printf(rowFormat, "No.", "Product Name", "Product Price", "Product Type");
         System.out.print(line);
 
+        int count = 0;
         for (Product product : Main.PRODUCT_LIST) {
-            count++;
 
+        	count++;
             System.out.printf(
                     rowFormat,
                     count + "",
@@ -212,16 +268,34 @@ public class AdminMenu implements Menu {
 
         int update;
         int price;
+        int idProduct = 0;
         while (true) {
-            update = Utils.scanAbsoluteInt("Input the product id to be changed [1 - " + count + "] (0 to back): ");
-            if (update >= 1 && update <= count) break;
-            else if (update == 0) return;
-            else System.out.println("Your Input is Invalid");
+            update = Utils.scanAbsoluteInt("Input the product id to be changed (0 to back): ");
+            
+            boolean checkInput = false;
+            if(update == 0) return;
+            else {
+            	idProduct = Main.PRODUCT_LIST.get(update - 1).getID();
+            	try {
+            		ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", idProduct);
+            		while(rs.next()) {
+            			checkInput = true;
+            		}
+            	} catch (SQLException e) {
+            		e.printStackTrace();
+            	}
+            	
+            	if (checkInput) break;
+            	else System.out.println("Your Input is Invalid");
+            }
         }
 
         System.out.println("Product Name : " + Main.PRODUCT_LIST.get(update - 1).getName());
         price = Utils.scanAbsoluteInt("Update Price from " + Main.PRODUCT_LIST.get(update - 1).getPrice() + " to ");
         Main.PRODUCT_LIST.get(update - 1).setPrice(price);
+        
+        //set price to db
+        db.execute("UPDATE products SET price = ? WHERE id = ?", price, idProduct);
 
         System.out.println("Successfully Updated!");
         Utils.waitForEnter();
@@ -251,12 +325,16 @@ public class AdminMenu implements Menu {
 
         int del;
         while (true) {
-            del = Utils.scanAbsoluteInt("Input the product id to be deleted [1 - " + count + "] (0 to delete): ");
+            del = Utils.scanAbsoluteInt("Input the number of product to be deleted [1 - " + count + "] (0 to delete): ");
             if (del >= 1 && del <= count) break;
             else if (del == 0) return;
             else System.out.println("Your Input is Invalid");
         }
 
+        //remove from db
+        int idProduct = Main.PRODUCT_LIST.get(del - 1).getID();
+        db.execute("DELETE FROM products WHERE id = ?", idProduct);
+        
         System.out.println(Main.PRODUCT_LIST.get(del - 1).getName() + " has been deleted");
         Main.PRODUCT_LIST.remove(del - 1);
 

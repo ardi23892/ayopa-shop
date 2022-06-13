@@ -1,17 +1,17 @@
 package com.github.argajuvi.models.product;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class FoodProduct extends Product {
 
-    private final LocalDate expireDate;
+    private final Date expireDate;
 
-    public FoodProduct(String name, int price, LocalDate expireDate) {
-        super(name, price);
+    public FoodProduct(int ID, String name, int price, Date expireDate) {
+        super(ID, name, price);
         this.expireDate = expireDate;
     }
 
-    public LocalDate getExpireDate() {
+    public Date getExpireDate() {
         return expireDate;
     }
 

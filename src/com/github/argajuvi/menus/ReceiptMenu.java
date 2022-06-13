@@ -9,6 +9,7 @@ import com.github.argajuvi.models.product.Product;
 import com.github.argajuvi.models.receipt.Receipt;
 import com.github.argajuvi.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ReceiptMenu implements Menu {
@@ -56,11 +57,14 @@ public class ReceiptMenu implements Menu {
 
                 break;
             }
+            
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            String date = formatter.format(foundReceipt.getPurchaseDate());
 
             System.out.println();
             System.out.println("---------------------------------------");
             System.out.println("Receipt ID   : " + foundReceipt.getId());
-            System.out.println("Purchase Date: " + Utils.DATE_FORMATTER.format(foundReceipt.getPurchaseDate()));
+            System.out.println("Purchase Date: " + date);
             System.out.println("Total Price  : " + Utils.formatPriceIDR(foundReceipt.getTotalPrice()));
             System.out.println();
 
@@ -86,7 +90,7 @@ public class ReceiptMenu implements Menu {
                 } else if (product instanceof FoodProduct) {
                     FoodProduct food = (FoodProduct) product;
 
-                    System.out.println("   - Expire Date : " + Utils.DATE_FORMATTER.format(food.getExpireDate()));
+                    System.out.println("   - Expire Date : " + food.getExpireDate());
                 }
             }
 
@@ -103,17 +107,19 @@ public class ReceiptMenu implements Menu {
             System.out.println("You haven't purchase anything from our shop.");
         } else {
             String rowFormat = "| %-15s | %-13s | %-20s |\n";
-            String line = "-----------------------------------------------------------\n";
+            String line = "----------------------------------------------------------\n";
 
             System.out.print(line);
-            System.out.printf(rowFormat, "Receipt ID", "Purchase Date", "Total Price");
+            System.out.printf(rowFormat, "Receipt ID", "Purchase Date", "Total Price ");
             System.out.print(line);
 
             for (Receipt receipt : receiptList) {
+            	SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                String date = formatter.format(receipt.getPurchaseDate());
                 System.out.printf(
                         rowFormat,
                         receipt.getId() + "",
-                        Utils.DATE_FORMATTER.format(receipt.getPurchaseDate()),
+                        date,
                         Utils.formatPriceIDR(receipt.getTotalPrice())
                 );
             }

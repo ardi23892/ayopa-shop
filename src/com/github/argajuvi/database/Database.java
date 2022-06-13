@@ -2,6 +2,8 @@ package com.github.argajuvi.database;
 
 import java.sql.*;
 
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
 public class Database {
 
     private static Database instance;
