@@ -2,16 +2,15 @@ package com.github.argajuvi.models.product;
 
 public abstract class Product {
 
-	private final int ID;
+	private final int id;
     private final String name;
     private int price;
     private final ProductType type;
 
-    public Product(int ID, String name, int price) {
+    public Product(int id, String name, int price) {
+        this.id = id;
         this.name = name;
         this.price = price;
-        this.ID = ID;
-        
         
         if (this instanceof FoodProduct) {
             this.type = ProductType.FOOD;
@@ -22,6 +21,10 @@ public abstract class Product {
         } else {
             throw new IllegalStateException("Invalid product type!");
         }
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {
@@ -39,9 +42,5 @@ public abstract class Product {
     public ProductType getType() {
         return type;
     }
-
-    public int getID() {
-		return ID;
-	}
 
 }

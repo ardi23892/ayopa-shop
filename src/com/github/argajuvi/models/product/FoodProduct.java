@@ -6,8 +6,8 @@ public class FoodProduct extends Product {
 
     private final Date expireDate;
 
-    public FoodProduct(int ID, String name, int price, Date expireDate) {
-        super(ID, name, price);
+    public FoodProduct(int id, String name, int price, Date expireDate) {
+        super(id, name, price);
         this.expireDate = expireDate;
     }
 

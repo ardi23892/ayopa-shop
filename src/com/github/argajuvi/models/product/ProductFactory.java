@@ -1,19 +1,19 @@
 package com.github.argajuvi.models.product;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 public class ProductFactory {
 
-    public static Product createClothProduct(String name, int price, char size) {
-        return new ClothingProduct(name, price, size);
+    public static Product createClothProduct(int id, String name, int price, char size) {
+        return new ClothingProduct(id, name, price, size);
     }
 
-    public static Product createFoodProduct(String name, int price, LocalDate expDate) {
-        return new FoodProduct(name, price, expDate);
+    public static Product createFoodProduct(int id, String name, int price, Date expDate) {
+        return new FoodProduct(id, name, price, expDate);
     }
 
-    public static Product createBookProduct(String name, int price, int publishYear, String author) {
-        return new BookProduct(name, price, publishYear, author);
+    public static Product createBookProduct(int id, String name, int price, int publishYear, String author) {
+        return new BookProduct(id, name, price, publishYear, author);
     }
 
 }

@@ -5,8 +5,9 @@ public class BookProduct extends Product {
     private final int publishYear;
     private final String author;
 
-    public BookProduct(int ID, String name, int price, int publishYear, String author) {
-        super(ID, name, price);
+    public BookProduct(int id, String name, int price, int publishYear, String author) {
+        super(id, name, price);
+
         this.publishYear = publishYear;
         this.author = author;
     }
