@@ -11,13 +11,16 @@ import com.github.argajuvi.models.receipt.Receipt;
 import com.github.argajuvi.models.user.User;
 import com.github.argajuvi.utils.Closer;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -82,7 +85,7 @@ public class Main {
         db.execute("CREATE TABLE IF NOT EXISTS seeder (last_seed DATE NOT NULL);");
     }
 
-    private void seedData(Database db) throws ParseException {
+    private void seedData(Database db) {
         boolean isSeeded = false;
 
         try (ResultSet rs = db.getResults("SELECT * FROM seeder")) {
@@ -95,7 +98,6 @@ public class Main {
             return;
         }
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
         String insertProductQuery = "INSERT INTO products VALUES (" +
                                     // id, name, price, type
                                     "  NULL, ?, ?, ?, " +
@@ -124,12 +126,12 @@ public class Main {
                 null, null,
                 null);
 
-        Date expireDate = formatter.parse(LocalDate.now().plus(1, ChronoUnit.MONTHS).toString());
+        LocalDate expiredDate = LocalDate.now().plus(1, ChronoUnit.MONTHS);
         db.execute(insertProductQuery,
                 "Lays 1 Ounce (Pack of 104)", 831_476, ProductType.FOOD.ordinal(),
                 null,
                 null, null,
-                expireDate);
+                Date.valueOf(expiredDate));
 
         String insertUserQuery = "INSERT INTO users VALUES (NULL, ?, ?)";
         db.execute(insertUserQuery, "admin", "admin123");
