@@ -28,7 +28,6 @@ public class Main {
      * Stores the currently logged-in user.
      */
     public static User CURRENT_USER = null;
-    public static int userId = 0;
 
     private void createTables(Database db) {
         db.execute(
@@ -205,7 +204,7 @@ public class Main {
                 username = rs.getString("username");
                 password = rs.getString("password");
 
-                USER_LIST.add(new User(username, password));
+                USER_LIST.add(new User(userId, username, password));
 
                 //cek product dan receipt nya, yang receiptnya sudah di checkout
                 ResultSet rsReceipt = closer.add(db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 1", userId));

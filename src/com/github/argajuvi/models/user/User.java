@@ -8,6 +8,8 @@ import java.util.List;
 
 public class User {
 
+    private final int id;
+
     private final String username, password;
     private final List<Receipt> receiptList;
 
@@ -19,12 +21,18 @@ public class User {
      */
     private final List<Order> cart;
 
-    public User(String username, String password) {
+    public User(int id, String username, String password) {
+        this.id = id;
+
         this.username = username;
         this.password = password;
 
         this.receiptList = new ArrayList<>();
         this.cart = new ArrayList<>();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {
