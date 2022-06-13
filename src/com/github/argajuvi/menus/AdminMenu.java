@@ -96,22 +96,13 @@ public class AdminMenu implements Menu {
                 } else isProductSizeOk = true;
             }
 
-            System.out.println(productName + " | " + productPrice + " | " + size);
-
-
-            //insert into db (error saat input character)
-            if (size == 'S')
-                db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'S', NULL, NULL, NULL)", productName, productPrice);
-            else if (size == 'M')
-                db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'M', NULL, NULL, NULL)", productName, productPrice);
-            else
-                db.execute("INSERT INTO products VALUES(NULL, ?, ?, 1, 'L', NULL, NULL, NULL)", productName, productPrice);
-
-            System.out.println("Succes Insert");
+            db.execute("INSERT INTO products (name, price type, size) VALUES (?, ?, ?, ?)",
+                    productName, productPrice, ProductType.CLOTHING.ordinal(), String.valueOf(size));
 
             int idProduct = 0;
-            try (ResultSet rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 1", productName, productPrice)) {
-                while (rs.next()) {
+            String query = "SELECT * FROM products WHERE name = ? AND price = ? AND type = ?";
+            try (ResultSet rs = db.getResults(query, productName, productPrice, ProductType.CLOTHING.ordinal())) {
+                if (rs.next()) {
                     idProduct = rs.getInt("id");
                 }
             } catch (SQLException e) {
@@ -144,12 +135,14 @@ public class AdminMenu implements Menu {
                 }
             }
 
-            //insert into db
-            db.execute("INSERT INTO products VALUES(NULL, ?, ?, 3, NULL, NULL, NULL, ?)", productName, productPrice, Date.valueOf(expDate));
+            db.execute("INSERT INTO products (name, price, type, expire_date) VALUES (?, ?, ?, ?)",
+                    productName, productPrice, ProductType.FOOD.ordinal(), Date.valueOf(expDate));
 
             int idProduct = 0;
-            try (ResultSet rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 3", productName, productPrice)) {
-                while (rs.next()) {
+            String query = "SELECT * FROM products WHERE name = ? AND price = ? AND type = ?";
+
+            try (ResultSet rs = db.getResults(query, productName, productPrice, ProductType.FOOD.ordinal())) {
+                if (rs.next()) {
                     idProduct = rs.getInt("id");
                 }
             } catch (SQLException e) {
@@ -180,14 +173,15 @@ public class AdminMenu implements Menu {
                 } else isAuthorOk = true;
             }
 
-            //insert into db
-            db.execute("INSERT INTO products VALUES(NULL, ?, ?, 2, NULL, ?, ?, NULL)", productName, productPrice, publicationYear, author);
+            db.execute("INSERT INTO products (name, price, type, publication_year, author) VALUES (?, ?, ?, ?, ?)",
+                    productName, productPrice, ProductType.BOOK.ordinal(), publicationYear, author);
 
             int idProduct = 0;
-            ResultSet rs;
+            String query = "SELECT * FROM products WHERE name = ? AND price = ? AND type = ? AND publish_year = ? AND author = ?";
+
             try {
-                rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 2 AND publish_year = ? AND author = ?", productName, productPrice, publicationYear, author);
-                while (rs.next()) {
+                ResultSet rs = db.getResults(query, productName, productPrice, ProductType.BOOK.ordinal(), publicationYear, author);
+                if (rs.next()) {
                     idProduct = rs.getInt("id");
                 }
             } catch (SQLException e) {
@@ -277,9 +271,7 @@ public class AdminMenu implements Menu {
             } else {
                 idProduct = Main.PRODUCT_LIST.get(update - 1).getId();
                 try (ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", idProduct)) {
-                    while (rs.next()) {
-                        checkInput = true;
-                    }
+                    checkInput = rs.next();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
