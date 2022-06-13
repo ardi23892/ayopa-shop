@@ -10,16 +10,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class InitialMenu implements Menu {
 
     Database db = Database.getInstance();
-    List<User> userList = Main.USER_LIST;
 
     @Override
     public void showMenu() throws ParseException {
-
         while (true) {
             Utils.clearScreen();
 
@@ -42,7 +41,7 @@ public class InitialMenu implements Menu {
                     this.loginUser();
                     break;
                 case 2:
-                    userList.add(this.registerUser());
+                    Main.USER_LIST.add(this.registerUser());
                     break;
                 case 0:
                     System.exit(0);
@@ -68,49 +67,34 @@ public class InitialMenu implements Menu {
         System.out.print("Input Password: ");
         password = scanner.nextLine();
 
-        //VALIDASI DATA LOGIN
-        boolean usernameCheck = false;
-        String currPassword = "";
+        List<User> userList = Main.USER_LIST;
+        Optional<User> optionalUser = userList.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
 
-        int userIdx = 0;
-        try {
-            ResultSet rs = db.getResults("SELECT * FROM users WHERE username = ?", username);
-            while (rs.next()) {
-                //USERNAME DITEMUKAN
-                Main.userId = rs.getInt("id");
-                usernameCheck = true;
-                for (int i = 0; i < userList.size(); i++) {
-                    if (username.equals(userList.get(i).getUsername())) userIdx = i;
-                }
-                currPassword = rs.getString("password");
-            }
-        } catch (SQLException e1) {
-            e1.printStackTrace();
-        }
-
-        if (!usernameCheck) {
+        if (!optionalUser.isPresent()) {
             System.out.println("Username doesn't exists! Make sure the account is registered!");
             Utils.waitForEnter();
+            return;
         }
 
-
-        if (currPassword.equals(password)) {
+        User user = optionalUser.get();
+        if (user.getPassword().equals(password)) {
             if (username.equals("admin")) {
                 menu = new AdminMenu();
             } else {
                 menu = new UserMenu();
             }
 
-            Main.CURRENT_USER = userList.get(userIdx);
+            Main.CURRENT_USER = user;
             menu.showMenu();
         }
-
     }
 
     //	FUNCTION REGISTER DATA USER BARU
     public User registerUser() {
         Scanner scanner = Utils.SCANNER;
-        boolean registering = true;
+        boolean registering;
 
         String username;
         String password;
@@ -124,7 +108,7 @@ public class InitialMenu implements Menu {
                 password = scanner.nextLine();
             } while (username.length() < 5 || password.length() < 5);
 
-            User newUser = new User(username, password);
+            User newUser = new User(0, username, password);
             registering = insertUser(newUser);
 
         } while (registering);
@@ -132,7 +116,7 @@ public class InitialMenu implements Menu {
         System.out.println("User is successfully registered!");
         Utils.waitForEnter();
 
-        return new User(username, password);
+        return new User(0, username, password);
     }
 
     //Insert Query with Unique user
