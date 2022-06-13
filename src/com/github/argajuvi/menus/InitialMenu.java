@@ -41,7 +41,7 @@ public class InitialMenu implements Menu {
                     this.loginUser();
                     break;
                 case 2:
-                    Main.USER_LIST.add(this.registerUser());
+                    this.registerUser();
                     break;
                 case 0:
                     System.exit(0);
@@ -92,53 +92,63 @@ public class InitialMenu implements Menu {
     }
 
     //	FUNCTION REGISTER DATA USER BARU
-    public User registerUser() {
+    public void registerUser() {
         Scanner scanner = Utils.SCANNER;
-        boolean registering;
 
         String username;
         String password;
-        // LOOPING SAMPAI REGISTRASI BERHASIL
+
+        // LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
         do {
-            // LOOPING SAMPAI KRITERIA USERNAME DAN PASSWORD TERPENUHI
-            do {
-                System.out.print("Input new username [> 5 characters]: ");
-                username = scanner.nextLine();
-                System.out.print("Input new password [> 5 characters]: ");
-                password = scanner.nextLine();
-            } while (username.length() < 5 || password.length() < 5);
+            System.out.print("Input new username [> 5 characters]: ");
+            username = scanner.nextLine();
 
-            User newUser = new User(0, username, password);
-            registering = insertUser(newUser);
+            System.out.print("Input new password [> 5 characters]: ");
+            password = scanner.nextLine();
+        } while (username.length() < 5 || password.length() < 5);
 
-        } while (registering);
+        User newUser = new User(0, username, password);
+        boolean registerResult = this.insertUser(newUser);
+
+        if (!registerResult) {
+            return;
+        }
 
         System.out.println("User is successfully registered!");
         Utils.waitForEnter();
 
-        return new User(0, username, password);
+        Main.USER_LIST.add(newUser);
     }
 
-    //Insert Query with Unique user
+    /**
+     * @return {@code true} if user registration succeeded, otherwise {@code false}
+     */
     public boolean insertUser(User newUser) {
-        boolean isNotRegistered = true;
+        boolean isRegistered = true;
 
         try (Closer closer = new Closer()) {
             ResultSet rs = closer.add(db.getResults("SELECT * FROM users WHERE username = ?", newUser.getUsername()));
-            isNotRegistered = rs.next();
+            isRegistered = rs.next();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        if (isNotRegistered) {
-            db.execute("INSERT INTO users VALUES (NULL, ?, ?)", newUser.getUsername(), newUser.getPassword());
-        } else {
+        if (isRegistered) {
             System.out.println("User has already been registered before, maybe try login with it?");
             Utils.waitForEnter();
-            return true;
+
+            return false;
         }
 
-        return false;
+        db.execute("INSERT INTO users VALUES (NULL, ?, ?)", newUser.getUsername(), newUser.getPassword());
+
+        try (ResultSet rs = db.getResults("SELECT id FROM users WHERE username = ?", newUser.getUsername())) {
+            int id = rs.getInt("id");
+            newUser.setId(id);
+        } catch (Exception ignored) {
+        }
+
+        return true;
     }
 
 }
