@@ -110,18 +110,15 @@ public class AdminMenu implements Menu {
             System.out.println("Succes Insert");
 
             int idProduct = 0;
-            ResultSet rs;
-            try {
-                rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 1", productName, productPrice);
+            try (ResultSet rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 1", productName, productPrice)) {
                 while (rs.next()) {
                     idProduct = rs.getInt("id");
-//	            	System.out.println("RS next");
                 }
-//				System.out.println("Test rs");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            product = ProductFactory.createClothProduct(0, productName, productPrice, size);
+
+            product = ProductFactory.createClothProduct(idProduct, productName, productPrice, size);
         } else if (choice == 2) {
             String strExpDate;
             LocalDate expDate = null;
@@ -151,17 +148,14 @@ public class AdminMenu implements Menu {
             db.execute("INSERT INTO products VALUES(NULL, ?, ?, 3, NULL, NULL, NULL, ?)", productName, productPrice, Date.valueOf(expDate));
 
             int idProduct = 0;
-            ResultSet rs;
-            try {
-                rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 3", productName, productPrice);
+            try (ResultSet rs = db.getResults("SELECT * FROM products WHERE name = ? AND price = ? AND type = 3", productName, productPrice)) {
                 while (rs.next()) {
                     idProduct = rs.getInt("id");
                 }
             } catch (SQLException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            product = ProductFactory.createFoodProduct(0, productName, productPrice, Date.valueOf(expDate));
+            product = ProductFactory.createFoodProduct(idProduct, productName, productPrice, Date.valueOf(expDate));
         } else {
             int publicationYear = 0;
             String author = null;
@@ -273,16 +267,16 @@ public class AdminMenu implements Menu {
 
         int update;
         int price;
-        int idProduct = 0;
+        int idProduct;
         while (true) {
             update = Utils.scanAbsoluteInt("Input the product id to be changed (0 to back): ");
 
             boolean checkInput = false;
-            if (update == 0) return;
-            else {
+            if (update == 0) {
+                return;
+            } else {
                 idProduct = Main.PRODUCT_LIST.get(update - 1).getId();
-                try {
-                    ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", idProduct);
+                try (ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", idProduct)) {
                     while (rs.next()) {
                         checkInput = true;
                     }
