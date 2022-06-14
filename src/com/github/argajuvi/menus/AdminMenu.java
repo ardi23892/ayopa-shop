@@ -96,7 +96,7 @@ public class AdminMenu implements Menu {
                 } else isProductSizeOk = true;
             }
 
-            db.execute("INSERT INTO products (name, price type, size) VALUES (?, ?, ?, ?)",
+            db.execute("INSERT INTO products (name, price, type, size) VALUES (?, ?, ?, ?)",
                     productName, productPrice, ProductType.CLOTHING.ordinal(), String.valueOf(size));
 
             int idProduct = 0;
