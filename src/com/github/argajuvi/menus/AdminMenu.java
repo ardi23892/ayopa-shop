@@ -262,6 +262,8 @@ public class AdminMenu implements Menu {
         int update;
         int price;
         int idProduct;
+        Product currentProduct;
+
         while (true) {
             update = Utils.scanAbsoluteInt("Input the product id to be changed (0 to back): ");
 
@@ -269,7 +271,9 @@ public class AdminMenu implements Menu {
             if (update == 0) {
                 return;
             } else {
-                idProduct = Main.PRODUCT_LIST.get(update - 1).getId();
+                currentProduct = Main.PRODUCT_LIST.get(update - 1);
+                idProduct = currentProduct.getId();
+
                 try (ResultSet rs = db.getResults("SELECT * FROM products WHERE id = ?", idProduct)) {
                     checkInput = rs.next();
                 } catch (SQLException e) {
@@ -281,9 +285,19 @@ public class AdminMenu implements Menu {
             }
         }
 
-        System.out.println("Product Name : " + Main.PRODUCT_LIST.get(update - 1).getName());
-        price = Utils.scanAbsoluteInt("Update Price from " + Main.PRODUCT_LIST.get(update - 1).getPrice() + " to ");
-        Main.PRODUCT_LIST.get(update - 1).setPrice(price);
+        System.out.println("Product Name : " + currentProduct.getName());
+        while (true) {
+            price = Utils.scanAbsoluteInt("Update Price from " + currentProduct.getPrice() + " : ");
+
+            if (price < 2) {
+                System.out.println("Minimum Rp 2!");
+                continue;
+            }
+
+            break;
+        }
+
+        currentProduct.setPrice(price);
 
         //set price to db
         db.execute("UPDATE products SET price = ? WHERE id = ?", price, idProduct);
