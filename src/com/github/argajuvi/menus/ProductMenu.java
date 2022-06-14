@@ -214,12 +214,10 @@ public class ProductMenu {
         //ubah receipt yang pending jadi selesai (1)
         Database db = Database.getInstance();
         int receiptId = 0;
-        try {
-            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = false", user.getId());
-            while (rs.next()) {
+        try (ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = false", user.getId())) {
+            if (rs.next()) {
                 receiptId = rs.getInt("id");
-                db.execute("UPDATE receipts SET status = true, purchase_date = ? WHERE id = ?", now, receiptId);
-
+                db.execute("UPDATE receipts SET status = true, purchase_date = ?, total_price = ? WHERE id = ?", now, receiptId, totalOfTotalPrice);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -227,8 +225,7 @@ public class ProductMenu {
 
         Receipt receipt = new Receipt(receiptId, orderList, now, totalOfTotalPrice);
         //nambah receipt ke data local
-        Main.CURRENT_USER.getReceiptList().add(receipt);
-
+        user.getReceiptList().add(receipt);
         cart.clear();
 
         System.out.println("Successfully purchase products!");
