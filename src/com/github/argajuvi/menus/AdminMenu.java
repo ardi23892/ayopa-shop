@@ -173,7 +173,7 @@ public class AdminMenu implements Menu {
                 } else isAuthorOk = true;
             }
 
-            db.execute("INSERT INTO products (name, price, type, publication_year, author) VALUES (?, ?, ?, ?, ?)",
+            db.execute("INSERT INTO products (name, price, type, publish_year, author) VALUES (?, ?, ?, ?, ?)",
                     productName, productPrice, ProductType.BOOK.ordinal(), publicationYear, author);
 
             int idProduct = 0;
