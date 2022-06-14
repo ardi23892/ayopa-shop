@@ -70,7 +70,7 @@ public class ProductMenu {
         while (true) {
             quantity = Utils.scanAbsoluteInt("Product quantity: ");
             if (quantity < 1) {
-                System.out.println("Product quantity must be greater than 1");
+                System.out.println("Product quantity must at least be 1");
                 continue;
             }
 
