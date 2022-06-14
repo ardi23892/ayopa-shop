@@ -65,7 +65,7 @@ public class Main {
                 "  user_id INT NOT NULL, " +
                 "  purchase_date DATE, " +
                 "  total_price INT NOT NULL, " +
-                "  status INT NOT NULL, " +
+                "  status BIT NOT NULL, " +
                 "  PRIMARY KEY (id), " +
                 "  FOREIGN KEY (user_id) REFERENCES users (id)" +
                 ");");

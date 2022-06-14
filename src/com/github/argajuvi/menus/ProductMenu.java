@@ -215,10 +215,10 @@ public class ProductMenu {
         Database db = Database.getInstance();
         int receiptId = 0;
         try {
-            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = 0", user.getId());
+            ResultSet rs = db.getResults("SELECT * FROM receipts WHERE user_id = ? AND status = false", user.getId());
             while (rs.next()) {
                 receiptId = rs.getInt("id");
-                db.execute("UPDATE receipts SET status = 1, purchase_date = ? WHERE id = ?", now, receiptId);
+                db.execute("UPDATE receipts SET status = true, purchase_date = ? WHERE id = ?", now, receiptId);
 
             }
         } catch (SQLException e) {
